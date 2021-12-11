@@ -16,7 +16,6 @@
         </a-col>
     </a-row>
 </template>
-
 <script>
 export default {
     name: "Home",

@@ -4,9 +4,10 @@
             <a class="hide" @click="handleHide">
                 <img src="~@/assets/hide.png" alt="" />
             </a>
-            <ul>
-                <li>
-                    <a href="">首页</a>
+            <ul class="menu_icon">
+                <li v-for="(row, index) in icons" :key="index">
+                    <a :href="row.route" v-if="index <= 4"><img :src="row.icon" /></a>
+                    <a class="menuDisable" v-if="index > 4"><img :src="row.icon" /></a>
                 </li>
             </ul>
         </div>
@@ -14,14 +15,21 @@
             <a class="show" @click="handleShow">
                 <img src="~@/assets/show.png" alt="" />
             </a>
+            <ul class="submenu_icon">
+                <li v-for="(row, index) in subicons" :key="index">
+                    <a :href="row.route" v-if="index <= 4"><img :src="row.icon" /></a>
+                    <a v-if="index > 4"><img :src="row.icon" /></a>
+                </li>
+            </ul>
         </div>
+        <a class="tip">
+            <img src="~@/assets/tip.png" alt="" />
+        </a>
         <router-view />
-        <div id="map"></div>
     </div>
 </template>
 
 <script>
-// import Menu from "@/components/Menu";
 import $ from "jquery";
 export default {
     name: "MapLayout",
@@ -31,10 +39,59 @@ export default {
             isProPreviewSite: process.env.NODE_ENV !== "development",
             menus: [],
             active: sessionStorage.getItem("menuActive"),
+            icons: [
+                { route: "/", icon: require("../assets/home.png") },
+                { route: "/wdzb", icon: require("../assets/wdzb_menu.png") },
+                { route: "/wdlx", icon: require("../assets/wdlx_menu.png") },
+                { route: "/wdrw", icon: require("../assets/wdrw_menu.png") },
+                { route: "/wdzp", icon: require("../assets/wdzp_menu.png") },
+                { route: "/wdtp", icon: require("../assets/wdtp_menu.png") },
+                { route: "/wdtz", icon: require("../assets/wdtz_menu.png") },
+            ],
+            iconsActive: [
+                { route: "/", icon: require("../assets/home.png") },
+                { route: "/wdzb", icon: require("../assets/wdzb_menu1.png") },
+                { route: "/wdlx", icon: require("../assets/wdlx_menu1.png") },
+                { route: "/wdrw", icon: require("../assets/wdrw_menu1.png") },
+                { route: "/wdzp", icon: require("../assets/wdzp_menu1.png") },
+                { route: "/wdtp", icon: require("../assets/wdtp_menu.png") },
+                { route: "/wdtz", icon: require("../assets/wdtz_menu.png") },
+            ],
+            subicons: [
+                { route: "/", icon: require("../assets/home_submenu.png") },
+                { route: "/wdzb", icon: require("../assets/wdzb_submenu.png") },
+                { route: "/wdlx", icon: require("../assets/wdlx_submenu.png") },
+                { route: "/wdrw", icon: require("../assets/wdrw_submenu.png") },
+                { route: "/wdzp", icon: require("../assets/wdzp_submenu.png") },
+                { route: "/wdtp", icon: require("../assets/wdtp_submenu.png") },
+                { route: "/wdtz", icon: require("../assets/wdtz_submenu.png") },
+            ],
+            subiconsActive: [
+                { route: "/", icon: require("../assets/home_submenu.png") },
+                { route: "/wdzb", icon: require("../assets/wdzb_submenu1.png") },
+                { route: "/wdlx", icon: require("../assets/wdzb_submenu1.png") },
+                { route: "/wdrw", icon: require("../assets/wdzb_submenu1.png") },
+                { route: "/wdzp", icon: require("../assets/wdzb_submenu1.png") },
+                { route: "/wdtp", icon: require("../assets/wdzb_submenu1.png") },
+                { route: "/wdtz", icon: require("../assets/wdzb_submenu1.png") },
+            ],
         };
     },
     mounted() {
-        this.initMap();
+        let that = this;
+
+        var icons = [...this.icons];
+        this.icons.forEach(function (v, i) {
+            if (v.route == that.$route.path) {
+                that.icons[i].icon = that.iconsActive[i].icon;
+            }
+        });
+        var subicons = [...this.subicons];
+        this.subicons.forEach(function (v, i) {
+            if (v.route == that.$route.path) {
+                that.subicons[i].icon = that.subiconsActive[i].icon;
+            }
+        });
     },
     methods: {
         handleShow() {
@@ -47,88 +104,6 @@ export default {
                 $(".submenu").show();
             });
             // sessionStorage.setItem("menu", 1);
-        },
-        initMap() {
-            var center = new TMap.LatLng(39.97912, 116.30563);
-            var map;
-            map = new TMap.Map(document.getElementById("map"), {
-                center: center,
-                mapStyleId: "style1",
-                zoom: 17.2, // 设置地图缩放级别
-                pitch: 43.5, // 设置俯仰角
-                rotation: 45, // 设置地图旋转角度
-            });
-
-            var infoWindow = new TMap.InfoWindow({
-                map: map,
-                position: center,
-                content:
-                    "<div><img src='https://mapapi.qq.com/web/lbs/javascriptGL/demo/img/em.jpg'><p>Hello World!</p></div>",
-            });
-
-            var marker = new TMap.MultiMarker({
-                map: map, // 显示Marker图层的底图
-                styles: {
-                    small: new TMap.MarkerStyle({
-                        // 点标注的相关样式
-                        width: 34, // 宽度
-                        height: 46, // 高度
-                        anchor: { x: 17, y: 23 }, // 标注点图片的锚点位置
-                        src:
-                            "https://mapapi.qq.com/web/lbs/visualizationApi/demo/img/small.png", // 标注点图片url或base64地址
-                        color: "#333", // 标注点文本颜色
-                        size: 16, // 标注点文本文字大小
-                        direction: "bottom", // 标注点文本文字相对于标注点图片的方位
-                        offset: { x: 0, y: 8 }, // 标注点文本文字基于direction方位的偏移属性
-                        strokeColor: "#fff", // 标注点文本描边颜色
-                        strokeWidth: 2, // 标注点文本描边宽度
-                    }),
-                },
-                enableCollision: false,
-                geometries: [
-                    {
-                        id: 1,
-                        styleId: "small",
-                        position: new TMap.LatLng(39.97912, 116.30563),
-                        content: "白家大院",
-                    },
-                    {
-                        id: 2,
-                        styleId: "small",
-                        position: new TMap.LatLng(39.97812, 116.30563),
-                        content: "白家大院2",
-                    },
-                ],
-            });
-
-            marker.on("click", function (evt) {
-                console.log(evt.geometry.id);
-                console.log(evt.geometry.position.toString());
-            });
-
-            var dashPaths = [
-                new TMap.LatLng(39.97912, 116.30563),
-                new TMap.LatLng(39.97812, 116.30563),
-            ];
-            var polylineLayer = new TMap.MultiPolyline({
-                map,
-                styles: {
-                    style_dash: new TMap.PolylineStyle({
-                        color: "#224BCF", // 线填充色
-                        width: 2, // 折线宽度
-                        lineCap: "round", // 线端头方式
-                        dashArray: [10, 10], // 虚线展示方式
-                    }),
-                },
-                geometries: [
-                    {
-                        styleId: "style_dash",
-                        paths: dashPaths,
-                    },
-                ],
-            });
-            // console.log(map);
-            // console.log(window);
         },
     },
 };
@@ -169,8 +144,8 @@ export default {
     background: none;
     border: none;
     position: absolute;
-    left: calc(120px / 8);
-    top: -3%;
+    left: calc(120px / 2 / 4);
+    top: calc(-120px / 2 / 4);
 }
 .show:hover,
 .show:active,
@@ -203,5 +178,56 @@ export default {
 }
 .logo-text {
     display: none;
+}
+.menu_icon {
+    width: calc(540px / 4);
+    text-align: center;
+    padding: 0;
+    margin-left: 3%;
+    margin-top: calc(120px / 4);
+}
+.menu_icon li {
+    display: inline-block;
+    list-style: none;
+    width: calc(360px / 4);
+    height: calc(100px / 4);
+    margin-bottom: calc(60px / 4);
+}
+.menu_icon li img {
+    width: 100%;
+    height: 100%;
+}
+
+.submenu_icon {
+    width: calc(120px / 4);
+    text-align: center;
+    padding: 0;
+    margin-left: 3%;
+    margin-top: calc(120px / 4);
+}
+.submenu_icon li {
+    list-style: none;
+    width: calc(115px / 4);
+    height: calc(100px / 4);
+    margin-bottom: calc(60px / 4);
+}
+.submenu_icon li img {
+    width: 100%;
+    height: 100%;
+}
+.tip {
+    width: calc(248px / 4);
+    height: calc(364px / 4);
+    position: absolute;
+    right: 0;
+    bottom: 20%;
+    z-index: 9999;
+}
+.tip img {
+    width: 100%;
+    height: 100%;
+}
+.menuDisable {
+    opacity: 0.5;
 }
 </style>

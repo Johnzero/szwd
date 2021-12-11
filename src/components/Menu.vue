@@ -5,8 +5,8 @@
                 <img src="~@/assets/hide.png" alt="" />
             </a-button>
             <ul>
-                <li>
-                    <a href="">首页</a>
+                <li v-for="(row, index) in icons" :key="index">
+                    <a :href="{{row.route}}"><img :src="{{row.icon}}" /></a>
                 </li>
             </ul>
         </div>
@@ -28,6 +28,24 @@ export default {
         return {
             isProPreviewSite: process.env.NODE_ENV !== "development",
             menus: [],
+            icons: [
+                { route: "/", icon: "~@/assets/home.png" },
+                { route: "/wdzb", icon: "~@/assets/wdzb_menu.png" },
+                { route: "/wdlx", icon: "~@/assets/wdlx_menu.png" }
+                { route: "/wdrw", icon: "~@/assets/wdrw_menu.png" }
+                { route: "/wdzp", icon: "~@/assets/wdzp_menu.png" }
+                { route: "/wdtp", icon: "~@/assets/wdtp_menu.png" }
+                { route: "/wdtz", icon: "~@/assets/wdtz_menu.png" }
+            ],
+            iconsActive: [
+                { route: "/", icon: "~@/assets/home.png" },
+                { route: "/wdzb", icon: "~@/assets/wdzb_menu1.png" },
+                { route: "/wdlx", icon: "~@/assets/wdlx_menu1.png" }
+                { route: "/wdrw", icon: "~@/assets/wdrw_menu1.png" }
+                { route: "/wdzp", icon: "~@/assets/wdzp_menu1.png" }
+                { route: "/wdtp", icon: "~@/assets/wdtp_menu.png" }
+                { route: "/wdtz", icon: "~@/assets/wdtz_menu.png" }
+            ],
             active: sessionStorage.getItem("menuActive"),
         };
     },
