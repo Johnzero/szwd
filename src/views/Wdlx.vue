@@ -6,63 +6,12 @@
                 <a @click="showPos(row.type, index)"><img :src="row.icon" /></a>
             </li>
         </ul>
-        <div v-show="showinfo" class="biginfo">
-            <div class="biginfoinner">
-                <swiper ref="mySwiper" :options="swiperOptions">
-                    <div class="swiper-slide" :key="banner" v-for="banner in banners">
-                        <img :src="banner" />
-                    </div>
-                    <div class="swiper-pagination" slot="pagination"></div>
-                </swiper>
-                <div class="infocontent">
-                    <div class="infotitle">
-                        栖霞寺
-                        <div class="videoImg" @click="showvideo = true">
-                            <img :src="videoImg" />
-                        </div>
-                    </div>
-                    <p>
-                        “春牛首，秋栖霞”，南京人对于栖霞山的热爱可见一斑，或许是乾隆六下江南，五次驻足栖霞山，让这座金陵第一名秀山更添神圣。迄今已有
-                        1500 多年历史的栖霞寺 ，
-                        是中国四大名刹之一，每到秋季，在红枫交融间的栖霞寺，更显满满的禅意，深秋的栖霞寺。寻个好天气，约上小伙伴去栖霞寺烧香祈福，虔诚的许下愿望也是极好的！
-                    </p>
-                </div>
-            </div>
-            <a onclick="handleHide()" class="infoclose">
-                <img src="/close.png" />
-            </a>
-        </div>
-        <div v-show="showvideo" class="videoBlock">
-            <div class="demo">
-                <video-player
-                    @play="showPlay = false"
-                    @pause="showPlay = true"
-                    class="video-player vjs-custom-skin"
-                    ref="videoPlayer"
-                    :playsinline="true"
-                    :options="playerOptions"
-                >
-                </video-player>
-            </div>
-            <img
-                v-show="showPlay"
-                @click="playButton"
-                class="playButton"
-                src="~@/assets/play.png"
-            />
-            <a @click="hideVideo" class="infoclose">
-                <img src="/close.png" />
-            </a>
-        </div>
     </div>
 </template>
 
 <script>
-// import { swiper, swiperslide, directive } from "vue-awesome-swiper";
-// import "swiper/css/swiper.css";
-
 export default {
-    name: "Wdzb",
+    name: "Wdlx",
     components: {},
     data() {
         return {
@@ -71,35 +20,6 @@ export default {
             map: {},
             center: {},
             infoWindow: {},
-            showinfo: false,
-            showvideo: false,
-            showPlay: true,
-            playerOptions: {
-                autoplay: false,
-                muted: false,
-                loop: false,
-                preload: "false",
-                language: "zh-CN",
-                aspectRatio: "16:9",
-                fluid: true,
-                sources: [
-                    {
-                        type: "video/mp4",
-                        src:
-                            "http://dashboard.app.anhuiyun.com/storage/app/media/vedios/de4aee7e01264083985853677f67b173.mp4",
-                    },
-                ],
-                poster: "",
-                notSupportedMessage: "此视频暂无法播放，请稍后再试",
-                controlBar: {
-                    timeDivider: false,
-                    durationDisplay: false,
-                    remainingTimeDisplay: false,
-                    fullscreenToggle: true,
-                },
-            },
-            videoImg: require("../assets/qxs.png"),
-            banners: ["https://mapapi.qq.com/web/lbs/javascriptGL/demo/img/em.jpg"],
             icons: [
                 { type: "j", icon: require("../assets/j1.png") },
                 { type: "g", icon: require("../assets/g1.png") },
@@ -128,14 +48,6 @@ export default {
                     content: "白家大院2",
                 },
             ],
-            swiperOptions: {
-                slidesPerView: 1,
-                autoplay: true,
-                pagination: {
-                    el: ".swiper-pagination",
-                    type: "fraction",
-                },
-            },
         };
     },
     mounted() {
@@ -145,13 +57,34 @@ export default {
         this.initMap();
     },
     methods: {
-        hideVideo() {
-            this.$refs.videoPlayer.player.pause();
-            this.showvideo = false;
-        },
-        playButton() {
-            this.$refs.videoPlayer.player.play();
-            this.showPlay = false;
+        poly() {
+            var dashPaths = [
+                new TMap.LatLng(39.97912, 116.30563),
+                new TMap.LatLng(39.97812, 116.33563),
+                new TMap.LatLng(40.17812, 116.33563),
+            ];
+
+            var polylineLayer = new TMap.MultiPolyline({
+                id: "polyline-layer", //图层唯一标识
+                map: this.map, //绘制到目标地图
+                //折线样式定义
+                styles: {
+                    dash: new TMap.PolylineStyle({
+                        color: "#317B73", //线填充色
+                        width: 3, //折线宽度
+                        borderWidth: 0, //边线宽度
+                        dashArray: [10, 5],
+                        lineCap: "round", //线端头方式
+                    }),
+                },
+                geometries: [
+                    {
+                        id: "pl_1",
+                        styleId: "dash",
+                        paths: dashPaths,
+                    },
+                ],
+            });
         },
         createMarker() {
             let that = this;
@@ -226,8 +159,6 @@ export default {
         },
         handleHide() {
             this.infoWindow.close();
-            this.showinfo = false;
-            this.$refs.videoPlayer.player.stop();
         },
         markerClick(evt) {
             var iC = `
@@ -247,7 +178,6 @@ export default {
             this.infoWindow.setPosition(evt.geometry.position);
             this.infoWindow.setContent(iC);
             this.infoWindow.open();
-            this.showinfo = true;
         },
         showPos(type, v) {
             var activeImg = [
@@ -280,6 +210,7 @@ export default {
                 pitch: 0,
                 rotation: 0,
             });
+
             this.createMarker();
 
             this.infoWindow = new TMap.InfoWindow({
@@ -289,6 +220,7 @@ export default {
                 content: "<div></div>",
             });
             this.infoWindow.close();
+            this.poly();
         },
     },
 };
@@ -324,7 +256,6 @@ export default {
 .infowindow {
     width: calc(540px / 4);
     min-height: calc(567px / 4);
-    border-radius: calc(30px / 4);
     background: url("~@/assets/info.png") no-repeat;
     background-size: 100% 100%;
     box-shadow: 5px 5px 5px rgb(38 22 22 / 25%);
@@ -360,104 +291,5 @@ export default {
     position: absolute;
     width: calc(120px / 4);
     height: calc(120px / 4);
-}
-
-.biginfo {
-    width: calc(960px / 4);
-    min-height: calc(800px / 4);
-    max-height: 90%;
-    background: url("~@/assets/infobg.png") no-repeat;
-    background-size: 100% 100%;
-    border-radius: calc(30px / 4);
-    box-shadow: 5px 5px 5px #c3c3c3;
-    padding: calc(40px / 4);
-    position: absolute;
-    z-index: 99999;
-    right: 10%;
-    top: 20%;
-}
-.biginfoinner {
-    width: 100%;
-    height: 100%;
-    background: white;
-    border-radius: 5%;
-}
-.biginfocontent {
-    padding: calc(20px / 4);
-    overflow-y: scroll;
-}
-.infoclose img {
-    width: 100%;
-}
-.swiper-container {
-    width: 100%;
-    height: 100%;
-}
-
-.swiper-slide {
-    text-align: center;
-    font-size: 18px;
-    background: #fff;
-    /* Center slide text vertically */
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: -webkit-flex;
-    display: flex;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    -webkit-justify-content: center;
-    justify-content: center;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    -webkit-align-items: center;
-    align-items: center;
-}
-.swiper-slide img {
-    width: 100%;
-}
-.swiper-pagination {
-    color: white;
-    background: black;
-    width: calc(160px / 4);
-    border-radius: calc(40px / 4);
-    font-size: calc(48px / 4);
-    right: 1%;
-    bottom: 1%;
-    left: inherit;
-}
-.videoImg {
-    width: calc(64px / 4);
-    height: calc(55px / 4);
-    float: right;
-}
-.videoImg img {
-    width: 100%;
-    height: 100%;
-}
-
-.videoBlock {
-    width: calc(960px / 4);
-    background: url("~@/assets/infobg.png") no-repeat;
-    background-size: 100% 100%;
-    border-radius: calc(30px / 4);
-    box-shadow: 5px 5px 5px #c3c3c3;
-    padding: calc(40px / 4);
-    position: absolute;
-    z-index: 99999;
-    right: calc(12% + 960px / 4);
-    top: 20%;
-}
-.video-js .vjs-big-play-button {
-    display: none !important;
-}
-.playButton {
-    width: calc(93px / 4);
-    height: calc(93px / 4);
-    z-index: 9999999;
-    margin: 0 auto;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: calc(50% - 93px / 2 / 4);
 }
 </style>

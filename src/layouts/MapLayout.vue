@@ -22,8 +22,8 @@
                 </li>
             </ul>
         </div>
-        <a class="tip">
-            <img src="~@/assets/tip.png" alt="" />
+        <a @click="ewm = true" class="tip">
+            <img src="~@/assets/tip.gif" alt="" />
         </a>
         <router-view />
     </div>
@@ -36,6 +36,7 @@ export default {
     components: {},
     data() {
         return {
+            ewm: true,
             isProPreviewSite: process.env.NODE_ENV !== "development",
             menus: [],
             active: sessionStorage.getItem("menuActive"),
@@ -216,8 +217,8 @@ export default {
     height: 100%;
 }
 .tip {
-    width: calc(248px / 4);
-    height: calc(364px / 4);
+    width: calc(1000px / 4);
+    height: calc(1000px / 4);
     position: absolute;
     right: 0;
     bottom: 20%;

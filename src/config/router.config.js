@@ -26,6 +26,11 @@ export const asyncRouterMap = [
                 path: '/wdzb',
                 name: 'wdzb',
                 component: () => import('@/views/Wdzb')
+            },
+            {
+                path: '/wdlx',
+                name: 'wdlx',
+                component: () => import('@/views/Wdlx')
             }
         ]
     }

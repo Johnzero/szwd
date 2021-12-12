@@ -5,13 +5,13 @@
         </a-col>
         <a-col :span="12">
             <a-col :span="24"
-                ><a href=""> <img src="~@/assets/wdlx.png" /> </a
+                ><a href="/wdlx"> <img src="~@/assets/wdlx.png" /> </a
             ></a-col>
             <a-col :span="12"
-                ><a href=""> <img src="~@/assets/wdrw.png" /> </a
+                ><a href="/wdrw"> <img src="~@/assets/wdrw.png" /> </a
             ></a-col>
             <a-col :span="12"
-                ><a href=""> <img src="~@/assets/wdzp.png" /> </a
+                ><a href="/wdzp"> <img src="~@/assets/wdzp.png" /> </a
             ></a-col>
         </a-col>
     </a-row>
