@@ -10,6 +10,9 @@ import 'swiper/swiper-bundle.css'
 import VideoPlayer from 'vue-video-player'
 import 'vue-video-player/src/custom-theme.css'
 import 'video.js/dist/video-js.css'
+
+import axios from 'axios'
+
 Vue.use(VideoPlayer)
 
 Vue.component(Button.name, Button);
@@ -19,6 +22,9 @@ Vue.component(Icon.name, Icon);
 Vue.use(VueAwesomeSwiper)
 
 Vue.config.productionTip = false;
+
+axios.defaults.baseURL = 'https://wxdt.vqune.com/tools/' 
+Vue.prototype.$axios = axios
 
 new Vue({
   router,

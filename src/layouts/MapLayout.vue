@@ -25,6 +25,12 @@
         <a @click="ewm = true" class="tip">
             <img src="~@/assets/tip.gif" alt="" />
         </a>
+        <div v-drag v-show="ewm" class="ermBlock">
+            <img src="~@/assets/ewm.png" />
+            <a @click="ewm = false" class="infoclose">
+                <img src="/close.png" />
+            </a>
+        </div>
         <router-view />
     </div>
 </template>
@@ -36,7 +42,7 @@ export default {
     components: {},
     data() {
         return {
-            ewm: true,
+            ewm: false,
             isProPreviewSite: process.env.NODE_ENV !== "development",
             menus: [],
             active: sessionStorage.getItem("menuActive"),
@@ -77,6 +83,34 @@ export default {
                 { route: "/wdtz", icon: require("../assets/wdzb_submenu1.png") },
             ],
         };
+    },
+    directives: {
+        drag(el, bindings) {
+            let oDiv = el;
+            let self = this;
+            document.onselectstart = function () {
+                return false;
+            };
+            oDiv.onmousedown = function (e) {
+                //鼠标按下，计算当前元素距离可视区的距离
+                let disX = e.clientX - oDiv.offsetLeft;
+                let disY = e.clientY - oDiv.offsetTop;
+                document.onmousemove = function (e) {
+                    //通过事件委托，计算移动的距离
+                    let l = e.clientX - disX;
+                    let t = e.clientY - disY;
+                    //移动当前元素
+                    oDiv.style.left = l + "px";
+                    oDiv.style.top = t + "px";
+                };
+                document.onmouseup = function (e) {
+                    document.onmousemove = null;
+                    document.onmouseup = null;
+                };
+                //return false不加的话可能导致黏连，就是拖到一个地方时div粘在鼠标上不下来，相当于onmouseup失效
+                return false;
+            };
+        },
     },
     mounted() {
         let that = this;
@@ -217,7 +251,7 @@ export default {
     height: 100%;
 }
 .tip {
-    width: calc(1000px / 4);
+    width: calc(600px / 4);
     height: calc(1000px / 4);
     position: absolute;
     right: 0;
@@ -230,5 +264,30 @@ export default {
 }
 .menuDisable {
     opacity: 0.5;
+}
+.ermBlock {
+    z-index: 9999999;
+    width: calc(960px / 4);
+    height: calc(960px / 4);
+    background: url("~@/assets/infobg.png") no-repeat;
+    background-size: 100% 100%;
+    border-radius: calc(30px / 4);
+    box-shadow: 5px 5px 5px #c3c3c3;
+    padding: calc(40px / 4);
+    position: absolute;
+    z-index: 99999;
+    top: 30%;
+    left: calc(100vh - 960px / 2 / 4);
+}
+.ermBlock img {
+    width: 100%;
+    height: 100%;
+}
+.infoclose {
+    top: calc(-120px / 2 / 4);
+    right: calc(-120px / 2 / 4);
+    position: absolute;
+    width: calc(120px / 4);
+    height: calc(120px / 4);
 }
 </style>

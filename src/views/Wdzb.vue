@@ -6,7 +6,7 @@
                 <a @click="showPos(row.type, index)"><img :src="row.icon" /></a>
             </li>
         </ul>
-        <div v-show="showinfo" class="biginfo">
+        <div v-drag v-show="showinfo" class="biginfo">
             <div class="biginfoinner">
                 <swiper ref="mySwiper" :options="swiperOptions">
                     <div class="swiper-slide" :key="banner" v-for="banner in banners">
@@ -32,7 +32,7 @@
                 <img src="/close.png" />
             </a>
         </div>
-        <div v-show="showvideo" class="videoBlock">
+        <div v-drag v-show="showvideo" class="videoBlock">
             <div class="demo">
                 <video-player
                     @play="showPlay = false"
@@ -138,8 +138,45 @@ export default {
             },
         };
     },
+    directives: {
+        drag(el, bindings) {
+            let oDiv = el;
+            let self = this;
+            document.onselectstart = function () {
+                return false;
+            };
+            oDiv.onmousedown = function (e) {
+                //鼠标按下，计算当前元素距离可视区的距离
+                let disX = e.clientX - oDiv.offsetLeft;
+                let disY = e.clientY - oDiv.offsetTop;
+                document.onmousemove = function (e) {
+                    //通过事件委托，计算移动的距离
+                    let l = e.clientX - disX;
+                    let t = e.clientY - disY;
+                    //移动当前元素
+                    oDiv.style.left = l + "px";
+                    oDiv.style.top = t + "px";
+                };
+                document.onmouseup = function (e) {
+                    document.onmousemove = null;
+                    document.onmouseup = null;
+                };
+                //return false不加的话可能导致黏连，就是拖到一个地方时div粘在鼠标上不下来，相当于onmouseup失效
+                return false;
+            };
+        },
+    },
     mounted() {
         let that = this;
+        this.$axios
+            .get("app.ashx?action=Getjingdian")
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
         window.handleHide = this.handleHide;
         sessionStorage.setItem("geometries", JSON.stringify(this.geometries));
         this.initMap();
@@ -161,7 +198,7 @@ export default {
                     j: new TMap.MarkerStyle({
                         width: parseInt(80 / 4),
                         height: parseInt(98 / 4),
-                        anchor: { x: 80 / 4 / 2, y: 98 / 4 / 2 }, // 标注点图片的锚点位置
+                        // anchor: { x: 80 / 4, y: 98 / 4 }, // 标注点图片的锚点位置
                         src: require("../assets/j_pos.png"),
                         color: "#317B73",
                         size: 48 / 4,
@@ -173,7 +210,6 @@ export default {
                     g: new TMap.MarkerStyle({
                         width: parseInt(80 / 4),
                         height: parseInt(98 / 4),
-                        anchor: { x: 80 / 4 / 2, y: 98 / 4 / 2 }, // 标注点图片的锚点位置
                         src: require("../assets/g_pos.png"),
                         color: "#317B73",
                         size: 48 / 4,
@@ -185,7 +221,6 @@ export default {
                     ju: new TMap.MarkerStyle({
                         width: parseInt(80 / 4),
                         height: parseInt(98 / 4),
-                        anchor: { x: 80 / 4 / 2, y: 98 / 4 / 2 }, // 标注点图片的锚点位置
                         src: require("../assets/ju_pos.png"),
                         color: "#317B73",
                         size: 48 / 4,
@@ -197,7 +232,6 @@ export default {
                     s: new TMap.MarkerStyle({
                         width: parseInt(80 / 4),
                         height: parseInt(98 / 4),
-                        anchor: { x: 80 / 4 / 2, y: 98 / 4 / 2 }, // 标注点图片的锚点位置
                         src: require("../assets/s_pos.png"),
                         color: "#317B73",
                         size: 48 / 4,
@@ -209,7 +243,6 @@ export default {
                     d: new TMap.MarkerStyle({
                         width: parseInt(80 / 4),
                         height: parseInt(98 / 4),
-                        anchor: { x: 80 / 4 / 2, y: 98 / 4 / 2 }, // 标注点图片的锚点位置
                         src: require("../assets/d_pos.png"),
                         color: "#317B73",
                         size: 48 / 4,
@@ -227,7 +260,7 @@ export default {
         handleHide() {
             this.infoWindow.close();
             this.showinfo = false;
-            this.$refs.videoPlayer.player.stop();
+            this.$refs.videoPlayer.player.pause();
         },
         markerClick(evt) {
             var iC = `
@@ -268,7 +301,7 @@ export default {
             this.createMarker();
         },
         initMap() {
-            this.center = new TMap.LatLng(39.97912, 116.30563);
+            this.center = new TMap.LatLng(32.058228, 118.791178);
             var map;
             this.map = map = new TMap.Map(document.getElementById("map"), {
                 center: this.center,
@@ -281,6 +314,25 @@ export default {
                 rotation: 0,
             });
             this.createMarker();
+
+            new TMap.MultiMarker({
+                map: this.map,
+                styles: {
+                    wxkq: new TMap.MarkerStyle({
+                        width: parseInt(297 / 4),
+                        height: parseInt(267 / 4),
+                        src: require("../assets/sjwxkt.png"),
+                    }),
+                },
+                enableCollision: false,
+                geometries: [
+                    {
+                        id: "wxkq",
+                        styleId: "wxkq",
+                        position: this.center,
+                    },
+                ],
+            });
 
             this.infoWindow = new TMap.InfoWindow({
                 map: this.map,
@@ -353,13 +405,6 @@ export default {
     width: 100%;
     border-top-left-radius: 5%;
     border-top-right-radius: 5%;
-}
-.infoclose {
-    top: calc(-120px / 2 / 4);
-    right: calc(-120px / 2 / 4);
-    position: absolute;
-    width: calc(120px / 4);
-    height: calc(120px / 4);
 }
 
 .biginfo {
