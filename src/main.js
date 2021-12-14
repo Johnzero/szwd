@@ -1,7 +1,7 @@
 import Vue from "vue";
 // import Button from 'ant-design-vue/lib/button';
 // import 'ant-design-vue/dist/antd.css';
-import { Button, Row, Col,Icon } from "ant-design-vue";
+import { Button, Row, Col,Icon,message } from "ant-design-vue";
 import App from "./App";
 // import './core/lazy_use';
 import router from "./router";
@@ -14,7 +14,6 @@ import 'video.js/dist/video-js.css'
 import axios from 'axios'
 
 Vue.use(VideoPlayer)
-
 Vue.component(Button.name, Button);
 Vue.component(Row.name, Row);
 Vue.component(Col.name, Col);
@@ -25,6 +24,7 @@ Vue.config.productionTip = false;
 
 axios.defaults.baseURL = 'https://wxdt.vqune.com/tools/' 
 Vue.prototype.$axios = axios
+Vue.prototype.$message= message
 
 new Vue({
   router,

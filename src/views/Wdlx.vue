@@ -1,7 +1,10 @@
 <template>
     <div>
         <div id="map"></div>
-        <div class="lx">
+        <ul v-show="!showlx" class="lxs">
+            <li :key="lx.id" v-for="lx in lxs">{{ lx.title }}</li>
+        </ul>
+        <div v-show="!showlx" class="lx">
             <a class="lxmctitle">李白追月路线</a>
             <p class="lxmctext">共7个景点 约4小时</p>
             <ul>
@@ -38,9 +41,11 @@ export default {
             menus: [],
             map: {},
             center: {},
-            info: true,
+            info: false,
             infoWindow: {},
+            showlx: false,
             active: 0,
+            lxs: [],
             geometries: [
                 {
                     id: 1,
@@ -101,6 +106,7 @@ export default {
                 ],
             });
         },
+        markerClick() {},
         createMarker() {
             let that = this;
             this.marker = new TMap.MultiMarker({
@@ -143,7 +149,22 @@ export default {
                 enableCollision: false,
                 geometries: that.geometries,
             });
-            // this.marker.on("click", this.markerClick);
+            this.marker.on("click", this.markerClick);
+        },
+        getLx() {
+            let that = this;
+            this.$axios
+                .get(
+                    "app.ashx?action=GetRecommendRoutes&shuxing=0&pagesize=20&pageindex=1"
+                )
+                .then(function (response) {
+                    if (response.data.data) {
+                        that.lxs = response.data.data;
+                    }
+                })
+                .catch(function (error) {
+                    that.$message.error("网络错误！");
+                });
         },
         handleHide() {
             this.info = false;
@@ -161,9 +182,9 @@ export default {
                 pitch: 0,
                 rotation: 0,
             });
-
+            map.removeControl(TMap.constants.DEFAULT_CONTROL_ID.ROTATION);
             this.createMarker();
-
+            this.getLx();
             this.poly();
         },
     },
@@ -199,6 +220,55 @@ export default {
 .infoclose img {
     width: 100%;
     height: 100%;
+}
+.lxs {
+    width: calc(1900px / 4);
+    position: absolute;
+    z-index: 9999;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    top: 10%;
+    list-style: none;
+}
+.lxs li:before {
+    width: calc(25px / 4);
+    height: calc(85px / 4);
+    border-radius: 20%;
+    background: #ffcb29;
+    display: inline-block;
+    content: "";
+    top: calc(50% - 85px / 2 / 4);
+    position: absolute;
+    left: 0;
+}
+.lxs li {
+    position: relative;
+    width: calc(800px / 4);
+    display: inline-block;
+    height: calc(150px / 4);
+    background: #fdf3bf;
+    border-radius: calc(50px / 4);
+    box-shadow: 0px 20px 20px rgb(38 22 22 / 25%);
+    text-align: center;
+    line-height: calc(150px / 4);
+    margin-bottom: calc(80px / 4);
+    overflow: hidden;
+    color: #317b73;
+    font-size: calc(46px / 4);
+}
+.lxs li:hover {
+    background: #f8cb28;
+    color: white;
+}
+.lxs li:nth-child(odd) {
+    float: left;
+}
+.lxs li:nth-child(even) {
+    float: right;
+}
+.lxs li:nth-child(even):before {
+    background: #47c6c1;
 }
 .lx {
     width: calc(450px / 4);

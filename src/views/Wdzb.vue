@@ -9,23 +9,19 @@
         <div v-drag v-show="showinfo" class="biginfo">
             <div class="biginfoinner">
                 <swiper ref="mySwiper" :options="swiperOptions">
-                    <div class="swiper-slide" :key="banner" v-for="banner in banners">
-                        <img :src="banner" />
+                    <div class="swiper-slide" :key="banner.id" v-for="banner in banners">
+                        <img :src="banner.original_path" />
                     </div>
                     <div class="swiper-pagination" slot="pagination"></div>
                 </swiper>
                 <div class="infocontent">
                     <div class="infotitle">
-                        栖霞寺
-                        <div class="videoImg" @click="showvideo = true">
+                        {{ infotitle }}
+                        <div v-show="shipin" class="videoImg" @click="showvideo = true">
                             <img :src="videoImg" />
                         </div>
                     </div>
-                    <p>
-                        “春牛首，秋栖霞”，南京人对于栖霞山的热爱可见一斑，或许是乾隆六下江南，五次驻足栖霞山，让这座金陵第一名秀山更添神圣。迄今已有
-                        1500 多年历史的栖霞寺 ，
-                        是中国四大名刹之一，每到秋季，在红枫交融间的栖霞寺，更显满满的禅意，深秋的栖霞寺。寻个好天气，约上小伙伴去栖霞寺烧香祈福，虔诚的许下愿望也是极好的！
-                    </p>
+                    <div v-html="infocontent"></div>
                 </div>
             </div>
             <a onclick="handleHide()" class="infoclose">
@@ -69,11 +65,14 @@ export default {
             marker: {},
             menus: [],
             map: {},
-            center: {},
+            center: new TMap.LatLng(32.058228, 118.791178),
             infoWindow: {},
+            infotitle: "",
+            infocontent: "",
             showinfo: false,
             showvideo: false,
             showPlay: true,
+            shipin: "",
             playerOptions: {
                 autoplay: false,
                 muted: false,
@@ -85,8 +84,7 @@ export default {
                 sources: [
                     {
                         type: "video/mp4",
-                        src:
-                            "http://dashboard.app.anhuiyun.com/storage/app/media/vedios/de4aee7e01264083985853677f67b173.mp4",
+                        src: this.shipin,
                     },
                 ],
                 poster: "",
@@ -101,11 +99,11 @@ export default {
             videoImg: require("../assets/qxs.png"),
             banners: ["https://mapapi.qq.com/web/lbs/javascriptGL/demo/img/em.jpg"],
             icons: [
-                { type: "j", icon: require("../assets/j1.png") },
-                { type: "g", icon: require("../assets/g1.png") },
-                { type: "ju", icon: require("../assets/jb1.png") },
-                { type: "s", icon: require("../assets/s1.png") },
-                { type: "d", icon: require("../assets/d1.png") },
+                { type: "j", icon: require("../assets/j1.png"), id: "52" },
+                { type: "g", icon: require("../assets/g1.png"), id: "71" },
+                { type: "ju", icon: require("../assets/jb1.png"), id: "53" },
+                { type: "s", icon: require("../assets/s1.png"), id: "72" },
+                { type: "d", icon: require("../assets/d1.png"), id: "73" },
             ],
             activeIcons: [
                 require("../assets/j.png"),
@@ -116,16 +114,10 @@ export default {
             ],
             geometries: [
                 {
-                    id: 1,
-                    styleId: "j",
-                    position: new TMap.LatLng(39.97912, 116.30563),
-                    content: "白家大院",
-                },
-                {
-                    id: 2,
-                    styleId: "d",
-                    position: new TMap.LatLng(39.97812, 116.30563),
-                    content: "白家大院2",
+                    id: "wxkq",
+                    category_id: "wxkq",
+                    styleId: "wxkq",
+                    position: new TMap.LatLng(32.058228, 118.791178),
                 },
             ],
             swiperOptions: {
@@ -135,6 +127,69 @@ export default {
                     el: ".swiper-pagination",
                     type: "fraction",
                 },
+            },
+            styles: {
+                52: new TMap.MarkerStyle({
+                    width: parseInt(80 / 4),
+                    height: parseInt(98 / 4),
+                    // anchor: { x: 80 / 4, y: 98 / 4 }, // 标注点图片的锚点位置
+                    src: require("../assets/j_pos.png"),
+                    color: "#317B73",
+                    size: 48 / 4,
+                    direction: "bottom", // 标注点文本文字相对于标注点图片的方位
+                    offset: { x: 0, y: 8 }, // 标注点文本文字基于direction方位的偏移属性
+                    strokeColor: "#fff", // 标注点文本描边颜色
+                    strokeWidth: 2, // 标注点文本描边宽度
+                }),
+                71: new TMap.MarkerStyle({
+                    width: parseInt(80 / 4),
+                    height: parseInt(98 / 4),
+                    src: require("../assets/g_pos.png"),
+                    color: "#317B73",
+                    size: 48 / 4,
+                    direction: "bottom", // 标注点文本文字相对于标注点图片的方位
+                    offset: { x: 0, y: 8 }, // 标注点文本文字基于direction方位的偏移属性
+                    strokeColor: "#fff", // 标注点文本描边颜色
+                    strokeWidth: 2, // 标注点文本描边宽度
+                }),
+                53: new TMap.MarkerStyle({
+                    width: parseInt(80 / 4),
+                    height: parseInt(98 / 4),
+                    src: require("../assets/ju_pos.png"),
+                    color: "#317B73",
+                    size: 48 / 4,
+                    direction: "bottom", // 标注点文本文字相对于标注点图片的方位
+                    offset: { x: 0, y: 8 }, // 标注点文本文字基于direction方位的偏移属性
+                    strokeColor: "#fff", // 标注点文本描边颜色
+                    strokeWidth: 2, // 标注点文本描边宽度
+                }),
+                72: new TMap.MarkerStyle({
+                    width: parseInt(80 / 4),
+                    height: parseInt(98 / 4),
+                    src: require("../assets/s_pos.png"),
+                    color: "#317B73",
+                    size: 48 / 4,
+                    direction: "bottom", // 标注点文本文字相对于标注点图片的方位
+                    offset: { x: 0, y: 8 }, // 标注点文本文字基于direction方位的偏移属性
+                    strokeColor: "#fff", // 标注点文本描边颜色
+                    strokeWidth: 2, // 标注点文本描边宽度
+                }),
+                73: new TMap.MarkerStyle({
+                    width: parseInt(80 / 4),
+                    height: parseInt(98 / 4),
+                    src: require("../assets/d_pos.png"),
+                    color: "#317B73",
+                    size: 48 / 4,
+                    direction: "bottom", // 标注点文本文字相对于标注点图片的方位
+                    offset: { x: 0, y: 8 }, // 标注点文本文字基于direction方位的偏移属性
+                    strokeColor: "#fff", // 标注点文本描边颜色
+                    strokeWidth: 2, // 标注点文本描边宽度
+                }),
+                wxkq: new TMap.MarkerStyle({
+                    width: parseInt(297 / 4),
+                    height: parseInt(267 / 4),
+                    src: require("../assets/sjwxkt.png"),
+                }),
             },
         };
     },
@@ -168,18 +223,8 @@ export default {
     },
     mounted() {
         let that = this;
-        this.$axios
-            .get("app.ashx?action=Getjingdian")
-            .then(function (response) {
-                console.log(response);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-
+        that.initMap();
         window.handleHide = this.handleHide;
-        sessionStorage.setItem("geometries", JSON.stringify(this.geometries));
-        this.initMap();
     },
     methods: {
         hideVideo() {
@@ -192,68 +237,29 @@ export default {
         },
         createMarker() {
             let that = this;
+            let styles = { ...this.styles };
+            let geometries = [...this.geometries];
+            geometries.forEach((element, index) => {
+                if (element.src) {
+                    styles["i" + element.id] = new TMap.MarkerStyle({
+                        width: parseInt(200 / 4),
+                        height: parseInt(200 / 4),
+                        color: "#317B73",
+                        size: 48 / 4,
+                        direction: "bottom", // 标注点文本文字相对于标注点图片的方位
+                        offset: { x: 0, y: 8 }, // 标注点文本文字基于direction方位的偏移属性
+                        strokeColor: "#fff", // 标注点文本描边颜色
+                        strokeWidth: 2, // 标注点文本描边宽度
+                        src: element.src,
+                    });
+                    geometries[index].styleId = "i" + element.id;
+                }
+            });
             this.marker = new TMap.MultiMarker({
                 map: this.map, // 显示Marker图层的底图
-                styles: {
-                    j: new TMap.MarkerStyle({
-                        width: parseInt(80 / 4),
-                        height: parseInt(98 / 4),
-                        // anchor: { x: 80 / 4, y: 98 / 4 }, // 标注点图片的锚点位置
-                        src: require("../assets/j_pos.png"),
-                        color: "#317B73",
-                        size: 48 / 4,
-                        direction: "bottom", // 标注点文本文字相对于标注点图片的方位
-                        offset: { x: 0, y: 8 }, // 标注点文本文字基于direction方位的偏移属性
-                        strokeColor: "#fff", // 标注点文本描边颜色
-                        strokeWidth: 2, // 标注点文本描边宽度
-                    }),
-                    g: new TMap.MarkerStyle({
-                        width: parseInt(80 / 4),
-                        height: parseInt(98 / 4),
-                        src: require("../assets/g_pos.png"),
-                        color: "#317B73",
-                        size: 48 / 4,
-                        direction: "bottom", // 标注点文本文字相对于标注点图片的方位
-                        offset: { x: 0, y: 8 }, // 标注点文本文字基于direction方位的偏移属性
-                        strokeColor: "#fff", // 标注点文本描边颜色
-                        strokeWidth: 2, // 标注点文本描边宽度
-                    }),
-                    ju: new TMap.MarkerStyle({
-                        width: parseInt(80 / 4),
-                        height: parseInt(98 / 4),
-                        src: require("../assets/ju_pos.png"),
-                        color: "#317B73",
-                        size: 48 / 4,
-                        direction: "bottom", // 标注点文本文字相对于标注点图片的方位
-                        offset: { x: 0, y: 8 }, // 标注点文本文字基于direction方位的偏移属性
-                        strokeColor: "#fff", // 标注点文本描边颜色
-                        strokeWidth: 2, // 标注点文本描边宽度
-                    }),
-                    s: new TMap.MarkerStyle({
-                        width: parseInt(80 / 4),
-                        height: parseInt(98 / 4),
-                        src: require("../assets/s_pos.png"),
-                        color: "#317B73",
-                        size: 48 / 4,
-                        direction: "bottom", // 标注点文本文字相对于标注点图片的方位
-                        offset: { x: 0, y: 8 }, // 标注点文本文字基于direction方位的偏移属性
-                        strokeColor: "#fff", // 标注点文本描边颜色
-                        strokeWidth: 2, // 标注点文本描边宽度
-                    }),
-                    d: new TMap.MarkerStyle({
-                        width: parseInt(80 / 4),
-                        height: parseInt(98 / 4),
-                        src: require("../assets/d_pos.png"),
-                        color: "#317B73",
-                        size: 48 / 4,
-                        direction: "bottom", // 标注点文本文字相对于标注点图片的方位
-                        offset: { x: 0, y: 8 }, // 标注点文本文字基于direction方位的偏移属性
-                        strokeColor: "#fff", // 标注点文本描边颜色
-                        strokeWidth: 2, // 标注点文本描边宽度
-                    }),
-                },
+                styles: styles,
                 enableCollision: false,
-                geometries: that.geometries,
+                geometries: geometries,
             });
             this.marker.on("click", this.markerClick);
         },
@@ -263,45 +269,96 @@ export default {
             this.$refs.videoPlayer.player.pause();
         },
         markerClick(evt) {
-            var iC = `
-                <div class="infowindow">
-                    <div class="infoinner">
-                        <img src="https://mapapi.qq.com/web/lbs/javascriptGL/demo/img/em.jpg">
-                        <div class="infocontent">
-                            <div class="infotitle">栖霞寺</div>
-                            <p>详细地址：栖霞区栖霞山山门外</p>
-                        </div>
-                    </div>
-                    <a onclick="handleHide()" class="infoclose">
-                        <img src="/close.png" />
-                    </a>
-                </div>
-            `;
-            this.infoWindow.setPosition(evt.geometry.position);
-            this.infoWindow.setContent(iC);
-            this.infoWindow.open();
-            this.showinfo = true;
+            let that = this;
+            this.$axios
+                .get("app.ashx?action=Getjingdian&id=" + evt.geometry.id)
+                .then(function (response) {
+                    if (response.data.data) {
+                        var item = response.data.data;
+                        that.shipin = item.shipin;
+                        that.banners = item.albums;
+                        that.infotitle = item.title;
+                        that.infocontent = item.fields.jingdianjieshao;
+                        var iC =
+                            `
+                            <div class="infowindow">
+                                <div class="infoinner">
+                                    <img src="` +
+                            item.img_url +
+                            `">
+                                    <div class="infocontent">
+                                        <div class="infotitle">` +
+                            item.title +
+                            `</div>
+                                        <p>详细地址：` +
+                            item.fields.xiangxidizhi +
+                            `</p>
+                                        <p>开放时间：` +
+                            item.fields.kaifangshijian +
+                            `</p>
+                                        <p>参观费用：` +
+                            item.fields.canguanfeiyong +
+                            `</p>
+                                    </div>
+                                </div>
+                                <a onclick="handleHide()" class="infoclose">
+                                    <img src="/close.png" />
+                                </a>
+                            </div>
+                        `;
+                        that.infoWindow.setPosition(evt.geometry.position);
+                        that.infoWindow.setContent(iC);
+                        that.infoWindow.open();
+                        that.showinfo = true;
+
+                        // response.data.data.forEach((element) => {
+                        //     var geometrie = {
+                        //         id: element.id,
+                        //         styleId: element.category_id,
+                        //         position: new TMap.LatLng(element.jingdu, element.weidu),
+                        //         content: element.title,
+                        //         src: element.jianzhutupian,
+                        //     };
+                        //     console.log(element.jianzhutupian);
+                        //     that.geometries.push(geometrie);
+                        //     geometrie = {};
+                        // });
+                        // sessionStorage.setItem(
+                        //     "geometries",
+                        //     JSON.stringify(that.geometries)
+                        // );
+                        // that.createMarker();
+                    }
+                })
+                .catch(function (error) {
+                    that.$message.error("网络错误！");
+                });
         },
         showPos(type, v) {
+            let that = this;
             var activeImg = [
-                { type: "j", icon: require("../assets/j1.png") },
-                { type: "g", icon: require("../assets/g1.png") },
-                { type: "ju", icon: require("../assets/jb1.png") },
-                { type: "s", icon: require("../assets/s1.png") },
-                { type: "d", icon: require("../assets/d1.png") },
+                { type: "j", icon: require("../assets/j1.png"), id: "52" },
+                { type: "g", icon: require("../assets/g1.png"), id: "71" },
+                { type: "ju", icon: require("../assets/jb1.png"), id: "53" },
+                { type: "s", icon: require("../assets/s1.png"), id: "72" },
+                { type: "d", icon: require("../assets/d1.png"), id: "73" },
             ];
             this.icons = activeImg;
             this.icons[v].icon = this.activeIcons[v];
             var geometries = sessionStorage.getItem("geometries");
             geometries = JSON.parse(geometries);
-            var fileterGeo = geometries.filter((item) => item.styleId == type);
+
+            var fileterGeo = geometries.filter(
+                (item) =>
+                    item.category_id == that.icons[v].id || item.category_id == "wxkq"
+            );
             this.marker.setMap(null);
             this.marker = null;
             this.geometries = fileterGeo;
             this.createMarker();
         },
         initMap() {
-            this.center = new TMap.LatLng(32.058228, 118.791178);
+            let that = this;
             var map;
             this.map = map = new TMap.Map(document.getElementById("map"), {
                 center: this.center,
@@ -311,28 +368,38 @@ export default {
                 // pitch: 43.5, // 设置俯仰角
                 // rotation: 45, // 设置地图旋转角度
                 pitch: 0,
+                viewMode: "2D",
                 rotation: 0,
             });
-            this.createMarker();
-
-            new TMap.MultiMarker({
-                map: this.map,
-                styles: {
-                    wxkq: new TMap.MarkerStyle({
-                        width: parseInt(297 / 4),
-                        height: parseInt(267 / 4),
-                        src: require("../assets/sjwxkt.png"),
-                    }),
-                },
-                enableCollision: false,
-                geometries: [
-                    {
-                        id: "wxkq",
-                        styleId: "wxkq",
-                        position: this.center,
-                    },
-                ],
-            });
+            // map.removeControl(TMap.constants.DEFAULT_CONTROL_ID.ZOOM);
+            map.removeControl(TMap.constants.DEFAULT_CONTROL_ID.ROTATION);
+            this.$axios
+                .get("app.ashx?action=Getjingdianconcise")
+                .then(function (response) {
+                    if (response.data.data) {
+                        response.data.data.forEach((element) => {
+                            var geometrie = {
+                                id: element.id,
+                                styleId: element.category_id,
+                                position: new TMap.LatLng(element.jingdu, element.weidu),
+                                content: element.title,
+                                category_id: element.category_id,
+                                src: element.jianzhutupian,
+                            };
+                            that.geometries.push(geometrie);
+                            geometrie = {};
+                        });
+                        sessionStorage.setItem(
+                            "geometries",
+                            JSON.stringify(that.geometries)
+                        );
+                        that.createMarker();
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    that.$message.error("网络错误！");
+                });
 
             this.infoWindow = new TMap.InfoWindow({
                 map: this.map,
@@ -387,9 +454,11 @@ export default {
     height: 100%;
     background: white;
     border-radius: 5%;
+    overflow-y: scroll;
 }
 .infocontent {
     padding: calc(20px / 4);
+    max-height: calc(1200px / 4);
 }
 .infotitle {
     font-size: calc(32px / 4);
@@ -409,23 +478,30 @@ export default {
 
 .biginfo {
     width: calc(960px / 4);
-    min-height: calc(800px / 4);
-    max-height: 90%;
+    min-height: calc(600px / 4);
+    max-height: 80%;
     background: url("~@/assets/infobg.png") no-repeat;
     background-size: 100% 100%;
-    border-radius: calc(30px / 4);
+    border-radius: calc(40px / 4);
     box-shadow: 5px 5px 5px #c3c3c3;
     padding: calc(40px / 4);
     position: absolute;
     z-index: 99999;
     right: 10%;
-    top: 20%;
+    top: 10%;
 }
 .biginfoinner {
     width: 100%;
     height: 100%;
     background: white;
     border-radius: 5%;
+    overflow-y: scroll;
+}
+.biginfoinner .infocontent {
+    max-height: calc(800px / 4);
+}
+.biginfoinner img {
+    width: 100%;
 }
 .biginfocontent {
     padding: calc(20px / 4);
