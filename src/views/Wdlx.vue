@@ -2,30 +2,35 @@
     <div>
         <div id="map"></div>
         <ul v-show="!showlx" class="lxs">
-            <li :key="lx.id" v-for="lx in lxs">{{ lx.title }}</li>
+            <li @click="lxDetail(lx)" :key="lx.id" v-for="lx in lxs">{{ lx.title }}</li>
         </ul>
-        <div v-show="!showlx" class="lx">
-            <a class="lxmctitle">李白追月路线</a>
-            <p class="lxmctext">共7个景点 约4小时</p>
+        <div v-show="showlx" class="lx">
+            <a class="lxmctitle">{{ lx.title }}</a>
+            <p class="lxmctext">共{{ lxzb.length }}个景点 约4小时</p>
             <ul>
-                <li @click="showPos(2)">新亭公园</li>
-                <li>新亭公园</li>
-                <li>新亭公园</li>
-                <li>新亭公园</li>
-                <li>新亭公园</li>
-                <li>新亭公园</li>
-                <li>新亭公园</li>
-                <li>新亭公园</li>
+                <li @click="showPos(zb.id)" :key="zb.id" v-for="zb in lxzb">
+                    {{ zb.title }}
+                </li>
             </ul>
         </div>
         <div v-show="info" class="lxwindow">
-            <img src="~@/assets/lbzy.png" />
+            <img v-if="lx.xianluimg1" :src="lx.xianluimg1" />
+            <img v-if="lx.xianluimg2" :src="lx.xianluimg2" />
+            <img v-if="lx.xianluimg3" :src="lx.xianluimg3" />
+            <img :key="img.id" v-for="img in lximgs" :src="img.img_url" />
         </div>
         <a v-show="info" @click="info = false" class="infoclose">
             <img src="/close.png" />
         </a>
 
-        <a click="" class="backbutton">
+        <a
+            v-show="showlx"
+            @click="
+                showlx = false;
+                info = false;
+            "
+            class="backbutton"
+        >
             <img src="~@/assets/back.png" width="100%" />
         </a>
     </div>
@@ -37,35 +42,20 @@ export default {
     components: {},
     data() {
         return {
-            marker: {},
             menus: [],
+            marker: null,
+            polylineLayer: null,
             map: {},
-            center: {},
             info: false,
             infoWindow: {},
             showlx: false,
+            lx: {},
+            lxzb: [],
+            lximgs: [],
             active: 0,
+            center: new TMap.LatLng(32.058228, 118.791178),
             lxs: [],
-            geometries: [
-                {
-                    id: 1,
-                    styleId: "lx_start",
-                    position: new TMap.LatLng(39.97912, 116.30563),
-                    content: "白家大院",
-                },
-                {
-                    id: 2,
-                    styleId: "lx",
-                    position: new TMap.LatLng(39.97812, 116.35563),
-                    content: "白家大院2",
-                },
-                {
-                    id: 3,
-                    styleId: "lx_end",
-                    position: new TMap.LatLng(39.97812, 116.40563),
-                    content: "白家大院2",
-                },
-            ],
+            geometries: [],
         };
     },
     mounted() {
@@ -75,42 +65,71 @@ export default {
         this.initMap();
     },
     methods: {
+        lxDetail(v) {
+            let that = this;
+            this.lx = v;
+            console.log(v);
+            this.showlx = true;
+            this.info = true;
+            this.$axios
+                .get("app.ashx?action=Getxianlutoid&xlid=" + v.id)
+                .then(function (response) {
+                    if (response.data.data) {
+                        that.lxzb = response.data.data;
+                        that.createMarker();
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    that.$message.error("网络错误！");
+                });
+
+            that.lximgs = [];
+            this.$axios
+                .get("app.ashx?action=GetXianLuJinDianImg&xlid=" + v.id)
+                .then(function (response) {
+                    if (response.data.data) {
+                        that.lximgs = response.data.data;
+                        console.log(that.lximgs);
+                    }
+                })
+                .catch(function (error) {
+                    that.$message.error("网络错误！");
+                });
+        },
         showPos(id) {
             console.log(id);
         },
-        poly() {
-            var dashPaths = [];
-            this.geometries.forEach((ele) => {
-                dashPaths.push(ele.position);
-            });
-
-            var polylineLayer = new TMap.MultiPolyline({
-                id: "polyline-layer", //图层唯一标识
-                map: this.map, //绘制到目标地图
-                //折线样式定义
-                styles: {
-                    dash: new TMap.PolylineStyle({
-                        color: "#317B73", //线填充色
-                        width: 3, //折线宽度
-                        borderWidth: 0, //边线宽度
-                        dashArray: [10, 5],
-                        lineCap: "round", //线端头方式
-                    }),
-                },
-                geometries: [
-                    {
-                        id: "pl_1",
-                        styleId: "dash",
-                        paths: dashPaths,
-                    },
-                ],
-            });
-        },
+        poly() {},
         markerClick() {},
         createMarker() {
             let that = this;
+            let geometries = [];
+            that.lxzb.forEach((element, index) => {
+                var style = "lx";
+                if (index == 0) {
+                    style = "lx_start";
+                }
+                if (index == that.lxzb.length - 1) {
+                    console.log(index);
+                    style = "lx_end";
+                }
+                var geometrie = {
+                    id: element.id,
+                    styleId: style,
+                    position: new TMap.LatLng(element.jingdu, element.weidu),
+                    content: element.title,
+                };
+                geometries.push(geometrie);
+                geometrie = {};
+            });
+            if (this.marker) {
+                this.marker.setMap(null);
+                this.marker = null;
+            }
+
             this.marker = new TMap.MultiMarker({
-                map: this.map, // 显示Marker图层的底图
+                map: this.map,
                 styles: {
                     lx_start: new TMap.MarkerStyle({
                         width: parseInt(85 / 4),
@@ -147,9 +166,38 @@ export default {
                     }),
                 },
                 enableCollision: false,
-                geometries: that.geometries,
+                geometries: geometries,
             });
-            this.marker.on("click", this.markerClick);
+
+            var dashPaths = [];
+            that.lxzb.forEach((element) => {
+                dashPaths.push(new TMap.LatLng(element.jingdu, element.weidu));
+            });
+            if (this.polylineLayer) {
+                this.polylineLayer.setMap(null);
+                this.polylineLayer = null;
+            }
+            this.polylineLayer = new TMap.MultiPolyline({
+                id: "polyline-layer",
+                map: this.map,
+                styles: {
+                    dash: new TMap.PolylineStyle({
+                        color: "#317B73",
+                        width: 3,
+                        borderWidth: 0,
+                        dashArray: [10, 5],
+                        lineCap: "round",
+                    }),
+                },
+                geometries: [
+                    {
+                        id: "pl_1",
+                        styleId: "dash",
+                        paths: dashPaths,
+                    },
+                ],
+            });
+            // this.marker.on("click", this.markerClick);
         },
         getLx() {
             let that = this;
@@ -160,6 +208,7 @@ export default {
                 .then(function (response) {
                     if (response.data.data) {
                         that.lxs = response.data.data;
+                        console.log(that.lxs);
                     }
                 })
                 .catch(function (error) {
@@ -170,7 +219,6 @@ export default {
             this.info = false;
         },
         initMap() {
-            this.center = new TMap.LatLng(39.97912, 116.30563);
             var map;
             this.map = map = new TMap.Map(document.getElementById("map"), {
                 center: this.center,
@@ -183,9 +231,9 @@ export default {
                 rotation: 0,
             });
             map.removeControl(TMap.constants.DEFAULT_CONTROL_ID.ROTATION);
-            this.createMarker();
+            // this.createMarker();
             this.getLx();
-            this.poly();
+            // this.poly();
         },
     },
 };
@@ -336,6 +384,7 @@ export default {
     height: calc(100px / 4);
     margin: 0 auto;
     position: absolute;
+    z-index: 999999;
     bottom: 10%;
     left: 0;
     right: 0;

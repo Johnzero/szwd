@@ -76,11 +76,11 @@ export default {
             subiconsActive: [
                 { route: "/", icon: require("../assets/home_submenu.png") },
                 { route: "/wdzb", icon: require("../assets/wdzb_submenu1.png") },
-                { route: "/wdlx", icon: require("../assets/wdzb_submenu1.png") },
-                { route: "/wdrw", icon: require("../assets/wdzb_submenu1.png") },
-                { route: "/wdzp", icon: require("../assets/wdzb_submenu1.png") },
-                { route: "/wdtp", icon: require("../assets/wdzb_submenu1.png") },
-                { route: "/wdtz", icon: require("../assets/wdzb_submenu1.png") },
+                { route: "/wdlx", icon: require("../assets/wdlx_submenu1.png") },
+                { route: "/wdrw", icon: require("../assets/wdrw_submenu1.png") },
+                { route: "/wdzp", icon: require("../assets/wdzp_submenu1.png") },
+                { route: "/wdtp", icon: require("../assets/wdtp_submenu.png") },
+                { route: "/wdtz", icon: require("../assets/wdtz_submenu.png") },
             ],
         };
     },
