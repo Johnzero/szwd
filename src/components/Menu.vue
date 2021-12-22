@@ -68,24 +68,24 @@ export default {
 </script>
 <style scoped>
 .menu {
-    width: calc(540px / 4);
-    height: calc(1260px / 4);
+    width: calc(540px / 1);
+    height: calc(1260px / 1);
     background: url("~@/assets/menu.png") no-repeat;
     background-size: 100% 100%;
     position: absolute;
     left: 5%;
 }
 .submenu {
-    width: calc(120px / 4);
-    height: calc(1260px / 4);
+    width: calc(120px / 1);
+    height: calc(1260px / 1);
     background: url("~@/assets/submenu.png") no-repeat;
     background-size: 100% 100%;
     position: absolute;
     left: 0;
 }
 .hide {
-    width: calc(120px / 4);
-    height: calc(120px / 4);
+    width: calc(120px / 1);
+    height: calc(120px / 1);
     background: none;
     border: none;
     position: absolute;
@@ -93,7 +93,7 @@ export default {
     top: -3%;
 }
 .hide img {
-    width: calc(120px / 4);
-    height: calc(120px / 4);
+    width: calc(120px / 1);
+    height: calc(120px / 1);
 }
 </style>

@@ -260,22 +260,22 @@ export default {
     padding: 0;
     margin-left: 0;
     margin: 0 auto;
-    margin-top: calc(20px / 4);
+    margin-top: calc(20px / 1);
     text-align: left;
-    padding: 0 calc(30px / 4);
+    padding: 0 calc(30px / 1);
 }
 .zbs li {
     display: inline-block;
     list-style: none;
-    padding: calc(10px / 4) calc(20px / 4);
-    border-radius: calc(55px / 2 / 4);
-    margin: calc(20px / 4);
+    padding: calc(10px / 1) calc(20px / 1);
+    border-radius: calc(55px / 2 / 1);
+    margin: calc(20px / 1);
     background: #f5acac;
     color: white;
-    font-size: calc(28px / 4);
+    font-size: calc(28px / 1);
 }
 .rw-block {
-    width: calc(3135px / 4);
+    width: calc(3135px / 1);
     position: absolute;
     z-index: 999999;
     top: 10%;
@@ -284,33 +284,33 @@ export default {
     margin: 0 auto;
 }
 .pypx {
-    width: calc(376px / 4);
-    height: calc(104px / 4);
-    font-size: calc(42px / 4);
+    width: calc(376px / 1);
+    height: calc(104px / 1);
+    font-size: calc(42px / 1);
     display: block;
     color: white;
     text-align: center;
-    line-height: calc(104px / 4);
+    line-height: calc(104px / 1);
     background: url("~@/assets/pypx.png") no-repeat;
     background-size: 100% 100%;
 }
 .rws {
     width: 100%;
-    height: calc(180px / 4);
+    height: calc(180px / 1);
     background: url("~@/assets/rws.png") no-repeat;
     background-size: 100% 100%;
 }
 .rws li {
     list-style: none;
-    height: calc(120px / 4);
+    height: calc(120px / 1);
     display: inline-block;
-    line-height: calc(120px / 4);
+    line-height: calc(120px / 1);
     background: none;
-    border-radius: calc(60px / 4);
-    padding: 0 calc(40px / 4);
-    margin-top: calc(30px / 4);
-    font-size: calc(45px / 4);
-    margin-right: calc(45px / 4);
+    border-radius: calc(60px / 1);
+    padding: 0 calc(40px / 1);
+    margin-top: calc(30px / 1);
+    font-size: calc(45px / 1);
+    margin-right: calc(45px / 1);
     color: white;
 }
 .rws li:first-child {
@@ -322,22 +322,22 @@ export default {
 }
 .rwswg {
     width: 100%;
-    padding: calc(40px / 4);
-    margin-top: calc(40px / 4);
+    padding: calc(40px / 1);
+    margin-top: calc(40px / 1);
 }
 .swiper-slide {
-    width: calc(440px / 4);
-    height: calc(440px / 4);
+    width: calc(440px / 1);
+    height: calc(440px / 1);
     position: relative;
     list-style: none;
     text-align: center;
     background: url("~@/assets/rwli.png") no-repeat;
     background-size: 100% 100%;
-    border-radius: calc(40px / 4);
+    border-radius: calc(40px / 1);
 }
 .swiper-slide > img {
-    width: calc(258px / 4);
-    height: calc(258px / 4);
+    width: calc(258px / 1);
+    height: calc(258px / 1);
     display: inline-block;
     vertical-align: middle;
     margin: 0 auto;
@@ -359,10 +359,10 @@ export default {
     text-align: center;
     background: url("~@/assets/name.png") no-repeat;
     background-size: 100% 100%;
-    width: calc(190px / 4);
-    height: calc(54px / 4);
-    line-height: calc(54px / 4);
-    font-size: calc(46px / 4);
+    width: calc(190px / 1);
+    height: calc(54px / 1);
+    line-height: calc(54px / 1);
+    font-size: calc(46px / 1);
     overflow: hidden;
 }
 .swiper-button-prev:after {
@@ -371,8 +371,8 @@ export default {
 .swiper-button-prev {
     background: url("~@/assets/moreL.png") no-repeat;
     background-size: 100% 100%;
-    width: calc(100px / 4);
-    height: calc(100px / 4);
+    width: calc(100px / 1);
+    height: calc(100px / 1);
 }
 .swiper-button-next:after {
     content: "";
@@ -380,17 +380,17 @@ export default {
 .swiper-button-next {
     background: url("~@/assets/moreR.png") no-repeat;
     background-size: 100% 100%;
-    width: calc(100px / 4);
-    height: calc(100px / 4);
+    width: calc(100px / 1);
+    height: calc(100px / 1);
 }
 
 .biginfo {
-    width: calc(980px / 4);
+    width: calc(980px / 1);
     background: url("~@/assets/rwbg.png") no-repeat;
     background-size: 100% 100%;
-    border-radius: calc(40px / 4);
+    border-radius: calc(40px / 1);
     box-shadow: 5px 5px 5px #c3c3c3;
-    padding: calc(40px / 4);
+    padding: calc(40px / 1);
     position: absolute;
     z-index: 9999999;
     left: 0;
@@ -401,18 +401,18 @@ export default {
 .glzb {
     width: 100%;
     background: white;
-    margin-top: calc(45px / 4);
-    border-radius: calc(20px / 4);
+    margin-top: calc(45px / 1);
+    border-radius: calc(20px / 1);
 }
 .biginfoinner {
     width: 100%;
-    height: calc(620px / 4);
+    height: calc(620px / 1);
     background: white;
     border-radius: 5%;
     overflow-y: scroll;
 }
 .biginfoinner .infocontent {
-    height: calc(620px / 4);
+    height: calc(620px / 1);
 }
 .biginfoinner p {
     margin-bottom: 0;
@@ -421,7 +421,7 @@ export default {
     width: 100%;
 }
 .biginfocontent {
-    padding: calc(20px / 4);
+    padding: calc(20px / 1);
     overflow-y: scroll;
 }
 .biginfoinner .infocontent {
@@ -430,9 +430,9 @@ export default {
 .biginfoinner .infotitle {
     width: 100%;
     color: black;
-    font-size: calc(32px / 4);
+    font-size: calc(32px / 1);
     display: block;
-    margin-bottom: calc(20px / 4);
+    margin-bottom: calc(20px / 1);
 }
 .infoclose img {
     width: 100%;

@@ -56,20 +56,20 @@ export default {
             ],
             styles: {
                 52: new TMap.MarkerStyle({
-                    width: parseInt(100 / 4),
-                    height: parseInt(100 / 4),
-                    // anchor: { x: 80 / 4, y: 98 / 4 }, // 标注点图片的锚点位置
+                    width: parseInt(100 / 1),
+                    height: parseInt(100 / 1),
+                    // anchor: { x: 80 / 1, y: 98 / 1 }, // 标注点图片的锚点位置
                     src: require("../assets/book.png"),
                     color: "#317B73",
-                    size: 48 / 4,
+                    size: 48 / 1,
                     direction: "bottom", // 标注点文本文字相对于标注点图片的方位
                     offset: { x: 0, y: 8 }, // 标注点文本文字基于direction方位的偏移属性
                     strokeColor: "#fff", // 标注点文本描边颜色
                     strokeWidth: 2, // 标注点文本描边宽度
                 }),
                 wxkq: new TMap.MarkerStyle({
-                    width: parseInt(297 / 4),
-                    height: parseInt(267 / 4),
+                    width: parseInt(297 / 1),
+                    height: parseInt(267 / 1),
                     src: require("../assets/sjwxkt.png"),
                 }),
             },
@@ -245,14 +245,14 @@ export default {
 </script>
 <style scoped>
 .biginfo {
-    width: calc(960px / 4);
-    min-height: calc(600px / 4);
+    width: calc(960px / 1);
+    min-height: calc(600px / 1);
     max-height: 80%;
     background: url("~@/assets/infobg.png") no-repeat;
     background-size: 100% 100%;
-    border-radius: calc(40px / 4);
+    border-radius: calc(40px / 1);
     box-shadow: 5px 5px 5px #c3c3c3;
-    padding: calc(40px / 4);
+    padding: calc(40px / 1);
     position: absolute;
     z-index: 99999;
     right: 10%;
@@ -266,7 +266,7 @@ export default {
     overflow-y: scroll;
 }
 .biginfoinner .infocontent {
-    max-height: calc(800px / 4);
+    max-height: calc(800px / 1);
 }
 .biginfoinner p {
     margin-bottom: 0;
@@ -275,7 +275,7 @@ export default {
     width: 100%;
 }
 .biginfocontent {
-    padding: calc(20px / 4);
+    padding: calc(20px / 1);
     overflow-y: scroll;
 }
 .biginfoinner .infocontent {
@@ -284,9 +284,9 @@ export default {
 .biginfoinner .infotitle {
     width: 100%;
     color: black;
-    font-size: calc(32px / 4);
+    font-size: calc(32px / 1);
     display: block;
-    margin-bottom: calc(20px / 4);
+    margin-bottom: calc(20px / 1);
 }
 .infoclose img {
     width: 100%;

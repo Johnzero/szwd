@@ -129,64 +129,64 @@ export default {
             },
             styles: {
                 52: new TMap.MarkerStyle({
-                    width: parseInt(80 / 4),
-                    height: parseInt(98 / 4),
-                    // anchor: { x: 80 / 4, y: 98 / 4 }, // 标注点图片的锚点位置
+                    width: parseInt(80 / 1),
+                    height: parseInt(98 / 1),
+                    // anchor: { x: 80 / 1, y: 98 / 1 }, // 标注点图片的锚点位置
                     src: require("../assets/j_pos.png"),
                     color: "#317B73",
-                    size: 48 / 4,
+                    size: 48 / 1,
                     direction: "bottom", // 标注点文本文字相对于标注点图片的方位
                     offset: { x: 0, y: 8 }, // 标注点文本文字基于direction方位的偏移属性
                     strokeColor: "#fff", // 标注点文本描边颜色
                     strokeWidth: 2, // 标注点文本描边宽度
                 }),
                 71: new TMap.MarkerStyle({
-                    width: parseInt(80 / 4),
-                    height: parseInt(98 / 4),
+                    width: parseInt(80 / 1),
+                    height: parseInt(98 / 1),
                     src: require("../assets/g_pos.png"),
                     color: "#317B73",
-                    size: 48 / 4,
+                    size: 48 / 1,
                     direction: "bottom", // 标注点文本文字相对于标注点图片的方位
                     offset: { x: 0, y: 8 }, // 标注点文本文字基于direction方位的偏移属性
                     strokeColor: "#fff", // 标注点文本描边颜色
                     strokeWidth: 2, // 标注点文本描边宽度
                 }),
                 53: new TMap.MarkerStyle({
-                    width: parseInt(80 / 4),
-                    height: parseInt(98 / 4),
+                    width: parseInt(80 / 1),
+                    height: parseInt(98 / 1),
                     src: require("../assets/ju_pos.png"),
                     color: "#317B73",
-                    size: 48 / 4,
+                    size: 48 / 1,
                     direction: "bottom", // 标注点文本文字相对于标注点图片的方位
                     offset: { x: 0, y: 8 }, // 标注点文本文字基于direction方位的偏移属性
                     strokeColor: "#fff", // 标注点文本描边颜色
                     strokeWidth: 2, // 标注点文本描边宽度
                 }),
                 72: new TMap.MarkerStyle({
-                    width: parseInt(80 / 4),
-                    height: parseInt(98 / 4),
+                    width: parseInt(80 / 1),
+                    height: parseInt(98 / 1),
                     src: require("../assets/s_pos.png"),
                     color: "#317B73",
-                    size: 48 / 4,
+                    size: 48 / 1,
                     direction: "bottom", // 标注点文本文字相对于标注点图片的方位
                     offset: { x: 0, y: 8 }, // 标注点文本文字基于direction方位的偏移属性
                     strokeColor: "#fff", // 标注点文本描边颜色
                     strokeWidth: 2, // 标注点文本描边宽度
                 }),
                 73: new TMap.MarkerStyle({
-                    width: parseInt(80 / 4),
-                    height: parseInt(98 / 4),
+                    width: parseInt(80 / 1),
+                    height: parseInt(98 / 1),
                     src: require("../assets/d_pos.png"),
                     color: "#317B73",
-                    size: 48 / 4,
+                    size: 48 / 1,
                     direction: "bottom", // 标注点文本文字相对于标注点图片的方位
                     offset: { x: 0, y: 8 }, // 标注点文本文字基于direction方位的偏移属性
                     strokeColor: "#fff", // 标注点文本描边颜色
                     strokeWidth: 2, // 标注点文本描边宽度
                 }),
                 wxkq: new TMap.MarkerStyle({
-                    width: parseInt(297 / 4),
-                    height: parseInt(267 / 4),
+                    width: parseInt(297 / 1),
+                    height: parseInt(267 / 1),
                     src: require("../assets/sjwxkt.png"),
                 }),
             },
@@ -247,10 +247,10 @@ export default {
             geometries.forEach((element, index) => {
                 if (element.src) {
                     styles["i" + element.id] = new TMap.MarkerStyle({
-                        width: parseInt(200 / 4),
-                        height: parseInt(200 / 4),
+                        width: parseInt(200 / 1),
+                        height: parseInt(200 / 1),
                         color: "#317B73",
-                        size: 48 / 4,
+                        size: 48 / 1,
                         direction: "bottom", // 标注点文本文字相对于标注点图片的方位
                         offset: { x: 0, y: 8 }, // 标注点文本文字基于direction方位的偏移属性
                         strokeColor: "#fff", // 标注点文本描边颜色
@@ -431,7 +431,7 @@ export default {
 </script>
 <style scoped>
 .buttons {
-    width: calc(1110px / 4);
+    width: calc(1110px / 1);
     padding: 0;
     margin-left: 3%;
     position: absolute;
@@ -445,8 +445,8 @@ export default {
 .buttons li {
     display: inline-block;
     list-style: none;
-    width: calc(210px / 4);
-    height: calc(210px / 4);
+    width: calc(210px / 1);
+    height: calc(210px / 1);
     margin: 0;
 }
 .buttons li a,
@@ -458,13 +458,13 @@ export default {
 </style>
 <style>
 .infowindow {
-    width: calc(540px / 4);
-    min-height: calc(567px / 4);
-    border-radius: calc(30px / 4);
+    width: calc(540px / 1);
+    min-height: calc(567px / 1);
+    border-radius: calc(30px / 1);
     background: url("~@/assets/info.png") no-repeat;
     background-size: 100% 100%;
     box-shadow: 5px 5px 5px rgb(38 22 22 / 25%);
-    padding: calc(20px / 4);
+    padding: calc(20px / 1);
 }
 .infoinner {
     width: 100%;
@@ -474,18 +474,18 @@ export default {
     overflow-y: scroll;
 }
 .infocontent {
-    padding: calc(20px / 4);
-    max-height: calc(1200px / 4);
+    padding: calc(20px / 1);
+    max-height: calc(1200px / 1);
 }
 .infotitle {
-    font-size: calc(32px / 4);
+    font-size: calc(32px / 1);
     font-weight: bold;
-    padding-bottom: calc(10px / 4);
-    margin-bottom: calc(10px / 4);
+    padding-bottom: calc(10px / 1);
+    margin-bottom: calc(10px / 1);
     border-bottom: 1px solid #dedede;
 }
 .infocontent p {
-    font-size: calc(24px / 4);
+    font-size: calc(24px / 1);
 }
 .infowindow img {
     width: 100%;
@@ -494,14 +494,14 @@ export default {
 }
 
 .biginfo {
-    width: calc(960px / 4);
-    min-height: calc(600px / 4);
+    width: calc(960px / 1);
+    min-height: calc(600px / 1);
     max-height: 80%;
     background: url("~@/assets/infobg.png") no-repeat;
     background-size: 100% 100%;
-    border-radius: calc(40px / 4);
+    border-radius: calc(40px / 1);
     box-shadow: 5px 5px 5px #c3c3c3;
-    padding: calc(40px / 4);
+    padding: calc(40px / 1);
     position: absolute;
     z-index: 99999;
     right: 10%;
@@ -515,13 +515,13 @@ export default {
     overflow-y: scroll;
 }
 .biginfoinner .infocontent {
-    max-height: calc(800px / 4);
+    max-height: calc(800px / 1);
 }
 .biginfoinner img {
     width: 100%;
 }
 .biginfocontent {
-    padding: calc(20px / 4);
+    padding: calc(20px / 1);
     overflow-y: scroll;
 }
 .infoclose img {
@@ -556,16 +556,16 @@ export default {
 .swiper-pagination {
     color: white;
     background: black;
-    width: calc(160px / 4);
-    border-radius: calc(40px / 4);
-    font-size: calc(48px / 4);
+    width: calc(160px / 1);
+    border-radius: calc(40px / 1);
+    font-size: calc(48px / 1);
     right: 1%;
     bottom: 1%;
     left: inherit;
 }
 .videoImg {
-    width: calc(64px / 4);
-    height: calc(55px / 4);
+    width: calc(64px / 1);
+    height: calc(55px / 1);
     float: right;
 }
 .videoImg img {
@@ -574,29 +574,29 @@ export default {
 }
 
 .videoBlock {
-    width: calc(960px / 4);
+    width: calc(960px / 1);
     background: url("~@/assets/infobg.png") no-repeat;
     background-size: 100% 100%;
-    border-radius: calc(30px / 4);
+    border-radius: calc(30px / 1);
     box-shadow: 5px 5px 5px #c3c3c3;
-    padding: calc(40px / 4);
+    padding: calc(40px / 1);
     position: absolute;
     z-index: 99999;
-    right: calc(12% + 960px / 4);
+    right: calc(12% + 960px / 1);
     top: 20%;
 }
 .video-js .vjs-big-play-button {
     display: none !important;
 }
 .playButton {
-    width: calc(93px / 4);
-    height: calc(93px / 4);
+    width: calc(93px / 1);
+    height: calc(93px / 1);
     z-index: 9999999;
     margin: 0 auto;
     position: absolute;
     left: 0;
     right: 0;
-    top: calc(50% - 93px / 2 / 4);
+    top: calc(50% - 93px / 2 / 1);
 }
 #map > div > div:last-child {
     display: none;

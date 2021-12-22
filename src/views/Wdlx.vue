@@ -140,33 +140,33 @@ export default {
                 map: this.map,
                 styles: {
                     lx_start: new TMap.MarkerStyle({
-                        width: parseInt(85 / 4),
-                        height: parseInt(146 / 4),
+                        width: parseInt(85 / 1),
+                        height: parseInt(146 / 1),
                         color: "#317B73",
                         src: require("../assets/lx_start.png"),
-                        size: 48 / 4,
+                        size: 48 / 1,
                         direction: "bottom", // 标注点文本文字相对于标注点图片的方位
                         offset: { x: 0, y: 8 }, // 标注点文本文字基于direction方位的偏移属性
                         strokeColor: "#fff", // 标注点文本描边颜色
                         strokeWidth: 2, // 标注点文本描边宽度
                     }),
                     lx: new TMap.MarkerStyle({
-                        width: parseInt(85 / 4),
-                        height: parseInt(146 / 4),
+                        width: parseInt(85 / 1),
+                        height: parseInt(146 / 1),
                         color: "#317B73",
                         src: require("../assets/lxico.png"),
-                        size: 48 / 4,
+                        size: 48 / 1,
                         direction: "bottom", // 标注点文本文字相对于标注点图片的方位
                         offset: { x: 0, y: 8 }, // 标注点文本文字基于direction方位的偏移属性
                         strokeColor: "#fff", // 标注点文本描边颜色
                         strokeWidth: 2, // 标注点文本描边宽度
                     }),
                     lx_end: new TMap.MarkerStyle({
-                        width: parseInt(85 / 4),
-                        height: parseInt(146 / 4),
+                        width: parseInt(85 / 1),
+                        height: parseInt(146 / 1),
                         color: "#317B73",
                         src: require("../assets/lx_end.png"),
-                        size: 48 / 4,
+                        size: 48 / 1,
                         direction: "bottom", // 标注点文本文字相对于标注点图片的方位
                         offset: { x: 0, y: 8 }, // 标注点文本文字基于direction方位的偏移属性
                         strokeColor: "#fff", // 标注点文本描边颜色
@@ -249,12 +249,12 @@ export default {
 </script>
 <style scoped>
 .lxwindow {
-    width: calc(880px / 4);
+    width: calc(880px / 1);
     max-height: 80%;
     background: #68cead;
-    border-radius: calc(30px / 4);
+    border-radius: calc(30px / 1);
     box-shadow: 20px 20px 25px rgb(38 22 22 / 25%);
-    padding: calc(20px / 4);
+    padding: calc(20px / 1);
     z-index: 99999;
     overflow-x: none;
     overflow-y: scroll;
@@ -267,11 +267,11 @@ export default {
     /* height: 100%; */
 }
 .infoclose {
-    top: calc(10% - 120px / 2 / 4);
-    right: calc(10% - 120px / 2 / 4);
+    top: calc(10% - 120px / 2 / 1);
+    right: calc(10% - 120px / 2 / 1);
     position: absolute;
-    width: calc(120px / 4);
-    height: calc(120px / 4);
+    width: calc(120px / 1);
+    height: calc(120px / 1);
     z-index: 999999;
 }
 .infoclose img {
@@ -279,7 +279,7 @@ export default {
     height: 100%;
 }
 .lxs {
-    width: calc(1900px / 4);
+    width: calc(1900px / 1);
     position: absolute;
     z-index: 9999;
     margin: 0 auto;
@@ -289,30 +289,30 @@ export default {
     list-style: none;
 }
 .lxs li:before {
-    width: calc(25px / 4);
-    height: calc(85px / 4);
+    width: calc(25px / 1);
+    height: calc(85px / 1);
     border-radius: 20%;
     background: #ffcb29;
     display: inline-block;
     content: "";
-    top: calc(50% - 85px / 2 / 4);
+    top: calc(50% - 85px / 2 / 1);
     position: absolute;
     left: 0;
 }
 .lxs li {
     position: relative;
-    width: calc(800px / 4);
+    width: calc(800px / 1);
     display: inline-block;
-    height: calc(150px / 4);
+    height: calc(150px / 1);
     background: #fdf3bf;
-    border-radius: calc(50px / 4);
+    border-radius: calc(50px / 1);
     box-shadow: 0px 20px 20px rgb(38 22 22 / 25%);
     text-align: center;
-    line-height: calc(150px / 4);
-    margin-bottom: calc(80px / 4);
+    line-height: calc(150px / 1);
+    margin-bottom: calc(80px / 1);
     overflow: hidden;
     color: #317b73;
-    font-size: calc(46px / 4);
+    font-size: calc(46px / 1);
 }
 .lxs li:hover {
     background: #f8cb28;
@@ -346,34 +346,34 @@ export default {
 }
 
 .lx {
-    width: calc(450px / 4);
+    width: calc(450px / 1);
     position: absolute;
     left: 5%;
     top: 10%;
     z-index: 9999;
 }
 .lxmctitle {
-    width: calc(450px / 4);
-    height: calc(120px / 4);
+    width: calc(450px / 1);
+    height: calc(120px / 1);
     text-align: center;
-    line-height: calc(120px / 4);
+    line-height: calc(120px / 1);
     display: block;
     color: white;
-    font-size: calc(48px / 4);
+    font-size: calc(48px / 1);
     background: url("~@/assets/lxt.png") no-repeat;
     background-size: 100% 100%;
-    margin-bottom: calc(20px / 4);
+    margin-bottom: calc(20px / 1);
 }
 .lxmctext {
-    width: calc(450px / 4);
-    height: calc(120px / 4);
+    width: calc(450px / 1);
+    height: calc(120px / 1);
     text-align: center;
-    line-height: calc(120px / 4);
+    line-height: calc(120px / 1);
     display: block;
     color: #317b73;
-    font-size: calc(42px / 4);
+    font-size: calc(42px / 1);
     text-shadow: 0 3px 3px rgba(0, 0, 0, 0.2);
-    margin-bottom: calc(20px / 4);
+    margin-bottom: calc(20px / 1);
 }
 .lx ul {
     padding: 0;
@@ -381,22 +381,22 @@ export default {
     text-align: center;
 }
 .lx ul li {
-    line-height: calc(120px / 4);
+    line-height: calc(120px / 1);
     display: block;
     text-align: left;
     color: #317b73;
-    font-size: calc(48px / 4);
+    font-size: calc(48px / 1);
     background: white;
     padding: 0 20%;
-    border-radius: calc(120px / 4);
-    margin-bottom: calc(20px / 4);
+    border-radius: calc(120px / 1);
+    margin-bottom: calc(20px / 1);
     box-shadow: 5px 5px 5px rgb(38 22 22 / 25%);
 }
 
 .lx ul li:before {
-    width: calc(36px / 4);
-    height: calc(36px / 4);
-    margin-right: calc(20px / 4);
+    width: calc(36px / 1);
+    height: calc(36px / 1);
+    margin-right: calc(20px / 1);
     border-radius: 50%;
     background: #96deda;
     display: inline-block;
@@ -409,8 +409,8 @@ export default {
     background: #ed9898;
 }
 .backbutton {
-    width: calc(300px / 4);
-    height: calc(100px / 4);
+    width: calc(300px / 1);
+    height: calc(100px / 1);
     margin: 0 auto;
     position: absolute;
     z-index: 999999;
