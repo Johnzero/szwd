@@ -2,7 +2,14 @@
     <div>
         <div id="map"></div>
         <ul v-show="!showlx" class="lxs">
-            <li @click="lxDetail(lx)" :key="lx.id" v-for="lx in lxs">{{ lx.title }}</li>
+            <li
+                :class="'color' + lx.shuxing"
+                @click="lxDetail(lx)"
+                :key="lx.id"
+                v-for="lx in lxs"
+            >
+                {{ lx.title }}
+            </li>
         </ul>
         <div v-show="showlx" class="lx">
             <a class="lxmctitle">{{ lx.title }}</a>
@@ -60,6 +67,7 @@ export default {
     },
     mounted() {
         let that = this;
+        document.title = "文都路线";
         window.handleHide = this.handleHide;
         sessionStorage.setItem("geometries", JSON.stringify(this.geometries));
         this.initMap();
@@ -173,6 +181,7 @@ export default {
             that.lxzb.forEach((element) => {
                 dashPaths.push(new TMap.LatLng(element.jingdu, element.weidu));
             });
+            that.map.setCenter(dashPaths[parseInt(dashPaths.length / 2)]);
             if (this.polylineLayer) {
                 this.polylineLayer.setMap(null);
                 this.polylineLayer = null;
@@ -224,7 +233,7 @@ export default {
                 center: this.center,
                 doubleClickZoom: false,
                 mapStyleId: "style1",
-                zoom: 13, // 设置地图缩放级别
+                zoom: 11, // 设置地图缩放级别
                 // pitch: 43.5, // 设置俯仰角
                 // rotation: 45, // 设置地图旋转角度
                 pitch: 0,
@@ -318,6 +327,24 @@ export default {
 .lxs li:nth-child(even):before {
     background: #47c6c1;
 }
+.color1:before {
+}
+
+.color2:before {
+    background: #49c6c1 !important;
+}
+.color2:hover {
+    background: #49c6c1 !important;
+    color: white !important;
+}
+.color3:before {
+    background: #e63838 !important;
+}
+.color3:hover {
+    background: #e63838 !important;
+    color: white !important;
+}
+
 .lx {
     width: calc(450px / 4);
     position: absolute;
@@ -356,9 +383,11 @@ export default {
 .lx ul li {
     line-height: calc(120px / 4);
     display: block;
+    text-align: left;
     color: #317b73;
     font-size: calc(48px / 4);
     background: white;
+    padding: 0 20%;
     border-radius: calc(120px / 4);
     margin-bottom: calc(20px / 4);
     box-shadow: 5px 5px 5px rgb(38 22 22 / 25%);

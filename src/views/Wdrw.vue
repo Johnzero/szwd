@@ -1,38 +1,65 @@
 <template>
     <div>
-        <div id="map"></div>
-        <ul v-show="!showlx" class="lxs">
-            <li @click="lxDetail(lx)" :key="lx.id" v-for="lx in lxs">{{ lx.title }}</li>
-        </ul>
-        <div v-show="showlx" class="lx">
-            <a class="lxmctitle">{{ lx.title }}</a>
-            <p class="lxmctext">共{{ lxzb.length }}个景点 约4小时</p>
-            <ul>
-                <li @click="showPos(zb.id)" :key="zb.id" v-for="zb in lxzb">
-                    {{ zb.title }}
+        <div class="rw-block">
+            <ul class="rws">
+                <li>选择时期</li>
+                <li
+                    :class="{ actived: index == current }"
+                    @click="lxDetail(lx, index)"
+                    :key="lx.id"
+                    v-for="(lx, index) in cats"
+                >
+                    {{ lx.title }}
                 </li>
             </ul>
+            <div class="pypx">拼音排序 <a-icon type="down" /></div>
+            <swiper
+                :auto-update="true"
+                :auto-destroy="true"
+                :key="swiperKey"
+                v-show="rws"
+                class="rwswg"
+                ref="mySwiper"
+                :options="swiperOptions"
+            >
+                <div
+                    class="swiper-slide"
+                    @click="rwDetail(rw, index, $event)"
+                    :key="rw.id"
+                    v-for="(rw, index) in rwsj"
+                >
+                    <img :src="rw.touxiang" />
+                    <div class="verthelp"></div>
+                    <a class="rwimg">
+                        {{ rw.xingming }}
+                    </a>
+                </div>
+                <div class="swiper-button-prev" slot="button-prev"></div>
+                <div class="swiper-button-next" slot="button-next"></div>
+            </swiper>
+            <div ref="biginfo" v-drag v-show="showbiginfo" class="biginfo">
+                <div class="biginfoinner">
+                    <div class="infocontent">
+                        <div v-html="dqrw.content"></div>
+                    </div>
+                </div>
+                <div class="glzb">
+                    <div class="zbtitle">关联坐标</div>
+                    <ul class="zbs">
+                        <li
+                            @click="jumpTo(row.id)"
+                            v-for="(row, index) in zbs"
+                            :key="index"
+                        >
+                            {{ row.title }}
+                        </li>
+                    </ul>
+                </div>
+                <a @click="handleHide" class="infoclose">
+                    <img src="/close.png" />
+                </a>
+            </div>
         </div>
-        <div v-show="info" class="lxwindow">
-            <img v-if="lx.xianluimg1" :src="lx.xianluimg1" />
-            <img v-if="lx.xianluimg2" :src="lx.xianluimg2" />
-            <img v-if="lx.xianluimg3" :src="lx.xianluimg3" />
-            <img :key="img.id" v-for="img in lximgs" :src="img.img_url" />
-        </div>
-        <a v-show="info" @click="info = false" class="infoclose">
-            <img src="/close.png" />
-        </a>
-
-        <a
-            v-show="showlx"
-            @click="
-                showlx = false;
-                info = false;
-            "
-            class="backbutton"
-        >
-            <img src="~@/assets/back.png" width="100%" />
-        </a>
     </div>
 </template>
 
@@ -43,349 +70,372 @@ export default {
     data() {
         return {
             menus: [],
-            marker: null,
-            polylineLayer: null,
+            rws: true,
+            cats: [],
+            rwsj: [],
             map: {},
-            info: false,
-            infoWindow: {},
-            showlx: false,
+            current: 9,
             lx: {},
-            lxzb: [],
-            lximgs: [],
-            active: 0,
+            swiperKey: Math.random().toString(36).substr(2) /*随机的key*/,
             center: new TMap.LatLng(32.058228, 118.791178),
-            lxs: [],
             geometries: [],
+            swiperOptions: {
+                slidesPerView: 6,
+                slidesPerColumn: 2,
+
+                autoplay: true,
+                spaceBetween: 20,
+                adaInterval: {},
+                pagination: {
+                    el: ".swiper-pagination",
+                    type: "fraction",
+                },
+                navigation: {
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev",
+                },
+            },
+            zbs: [],
+            xos: 0,
+            yos: 0,
+            showbiginfo: false,
+            dqrw: {},
         };
     },
+    directives: {
+        drag(el, bindings) {
+            let oDiv = el;
+            let self = this;
+            document.onselectstart = function () {
+                return false;
+            };
+            oDiv.onmousedown = function (e) {
+                //鼠标按下，计算当前元素距离可视区的距离
+                let disX = e.clientX - oDiv.offsetLeft;
+                let disY = e.clientY - oDiv.offsetTop;
+                document.onmousemove = function (e) {
+                    //通过事件委托，计算移动的距离
+                    let l = e.clientX - disX;
+                    let t = e.clientY - disY;
+                    //移动当前元素
+                    oDiv.style.left = l + "px";
+                    oDiv.style.top = t + "px";
+                };
+                document.onmouseup = function (e) {
+                    document.onmousemove = null;
+                    document.onmouseup = null;
+                };
+                //return false不加的话可能导致黏连，就是拖到一个地方时div粘在鼠标上不下来，相当于onmouseup失效
+                return false;
+            };
+        },
+    },
+    // computed: {
+    //     swiper() {
+    //         return this.$refs.mySwiper.$swiper;
+    //     },
+    // },
     mounted() {
         let that = this;
-        window.handleHide = this.handleHide;
-        sessionStorage.setItem("geometries", JSON.stringify(this.geometries));
-        this.initMap();
+        document.title = "文都人物";
+        this.adInterval = setInterval(() => {
+            this.$refs.mySwiper.swiper.autoplay.start();
+        }, 5000);
+        this.$axios
+            .get("app.ashx?action=Getniandai")
+            .then(function (response) {
+                if (response.data.data) {
+                    // console.log(response.data.data);
+                    that.cats = response.data.data;
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+                that.$message.error("网络错误！");
+            });
+
+        this.$axios
+            .get("app.ashx?action=Getrenwu&fenleiid=99&pageSize=1000&pageIndex=1")
+            .then(function (response) {
+                if (response.data.data) {
+                    that.rwsj = response.data.data;
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+                that.$message.error("网络错误！");
+            });
     },
     methods: {
-        lxDetail(v) {
+        jumpTo(id) {
+            this.$router.push({ path: "/wdzb?id=" + id });
+            console.log(id);
+        },
+        handleHide() {
+            this.showbiginfo = false;
+        },
+        lxDetail(e, i) {
             let that = this;
-            this.lx = v;
-            console.log(v);
-            this.showlx = true;
-            this.info = true;
             this.$axios
-                .get("app.ashx?action=Getxianlutoid&xlid=" + v.id)
+                .get(
+                    "app.ashx?action=Getrenwu&fenleiid=" +
+                        e.id +
+                        "&pageSize=1000&pageIndex=1"
+                )
                 .then(function (response) {
                     if (response.data.data) {
-                        that.lxzb = response.data.data;
-                        that.createMarker();
+                        that.rwsj = response.data.data;
+                        console.log(that.rwsj.length);
+                        if (that.rwsj.length < 7) {
+                            that.swiperOptions.slidesPerColumn = 1;
+                        } else {
+                            that.swiperOptions.slidesPerColumn = 2;
+                        }
+                        that.swiperKey = Math.random().toString(36).substr(2);
+
+                        // console.log(that.$refs.mySwiper.$swiper);
+                        // console.log(that.swiperOptions);
+                        // that.$refs.mySwiper.swiper.init();
+                        // that.$refs.mySwiper.swiper.update();
+                        // that.$refs.mySwiper.swiper.update();
+                        // console.log(that.$refs.mySwiper.swiper);
+                        // that.swiper.initSwiper();
                     }
                 })
                 .catch(function (error) {
                     console.log(error);
                     that.$message.error("网络错误！");
                 });
+            this.current = i;
+        },
+        rwDetail(e, i, event) {
+            console.log(event.clientY);
 
-            that.lximgs = [];
-            this.$axios
-                .get("app.ashx?action=GetXianLuJinDianImg&xlid=" + v.id)
-                .then(function (response) {
-                    if (response.data.data) {
-                        that.lximgs = response.data.data;
-                        console.log(that.lximgs);
-                    }
-                })
-                .catch(function (error) {
-                    that.$message.error("网络错误！");
-                });
-        },
-        showPos(id) {
-            console.log(id);
-        },
-        poly() {},
-        markerClick() {},
-        createMarker() {
+            // this.$refs.biginfo.style.top = event.pageX + "px";
+            // this.$refs.biginfo.style.left = event.pageY + "px";
+
             let that = this;
-            let geometries = [];
-            that.lxzb.forEach((element, index) => {
-                var style = "lx";
-                if (index == 0) {
-                    style = "lx_start";
-                }
-                if (index == that.lxzb.length - 1) {
-                    console.log(index);
-                    style = "lx_end";
-                }
-                var geometrie = {
-                    id: element.id,
-                    styleId: style,
-                    position: new TMap.LatLng(element.jingdu, element.weidu),
-                    content: element.title,
-                };
-                geometries.push(geometrie);
-                geometrie = {};
-            });
-            if (this.marker) {
-                this.marker.setMap(null);
-                this.marker = null;
-            }
-
-            this.marker = new TMap.MultiMarker({
-                map: this.map,
-                styles: {
-                    lx_start: new TMap.MarkerStyle({
-                        width: parseInt(85 / 4),
-                        height: parseInt(146 / 4),
-                        color: "#317B73",
-                        src: require("../assets/lx_start.png"),
-                        size: 48 / 4,
-                        direction: "bottom", // 标注点文本文字相对于标注点图片的方位
-                        offset: { x: 0, y: 8 }, // 标注点文本文字基于direction方位的偏移属性
-                        strokeColor: "#fff", // 标注点文本描边颜色
-                        strokeWidth: 2, // 标注点文本描边宽度
-                    }),
-                    lx: new TMap.MarkerStyle({
-                        width: parseInt(85 / 4),
-                        height: parseInt(146 / 4),
-                        color: "#317B73",
-                        src: require("../assets/lxico.png"),
-                        size: 48 / 4,
-                        direction: "bottom", // 标注点文本文字相对于标注点图片的方位
-                        offset: { x: 0, y: 8 }, // 标注点文本文字基于direction方位的偏移属性
-                        strokeColor: "#fff", // 标注点文本描边颜色
-                        strokeWidth: 2, // 标注点文本描边宽度
-                    }),
-                    lx_end: new TMap.MarkerStyle({
-                        width: parseInt(85 / 4),
-                        height: parseInt(146 / 4),
-                        color: "#317B73",
-                        src: require("../assets/lx_end.png"),
-                        size: 48 / 4,
-                        direction: "bottom", // 标注点文本文字相对于标注点图片的方位
-                        offset: { x: 0, y: 8 }, // 标注点文本文字基于direction方位的偏移属性
-                        strokeColor: "#fff", // 标注点文本描边颜色
-                        strokeWidth: 2, // 标注点文本描边宽度
-                    }),
-                },
-                enableCollision: false,
-                geometries: geometries,
-            });
-
-            var dashPaths = [];
-            that.lxzb.forEach((element) => {
-                dashPaths.push(new TMap.LatLng(element.jingdu, element.weidu));
-            });
-            if (this.polylineLayer) {
-                this.polylineLayer.setMap(null);
-                this.polylineLayer = null;
-            }
-            this.polylineLayer = new TMap.MultiPolyline({
-                id: "polyline-layer",
-                map: this.map,
-                styles: {
-                    dash: new TMap.PolylineStyle({
-                        color: "#317B73",
-                        width: 3,
-                        borderWidth: 0,
-                        dashArray: [10, 5],
-                        lineCap: "round",
-                    }),
-                },
-                geometries: [
-                    {
-                        id: "pl_1",
-                        styleId: "dash",
-                        paths: dashPaths,
-                    },
-                ],
-            });
-            // this.marker.on("click", this.markerClick);
-        },
-        getLx() {
-            let that = this;
+            this.dqrw = e;
+            this.adInterval && clearInterval(this.adInterval);
+            this.$refs.mySwiper.swiper.autoplay.stop();
             this.$axios
                 .get(
-                    "app.ashx?action=GetRecommendRoutes&shuxing=0&pagesize=20&pageindex=1"
+                    "app.ashx?action=Getjingdiantouid&rwid=" +
+                        e.id +
+                        "&pageSize=100&pageIndex=1"
                 )
                 .then(function (response) {
                     if (response.data.data) {
-                        that.lxs = response.data.data;
-                        console.log(that.lxs);
+                        that.zbs = response.data.data;
                     }
+                    that.showbiginfo = true;
                 })
                 .catch(function (error) {
+                    console.log(error);
                     that.$message.error("网络错误！");
                 });
-        },
-        handleHide() {
-            this.info = false;
-        },
-        initMap() {
-            var map;
-            this.map = map = new TMap.Map(document.getElementById("map"), {
-                center: this.center,
-                doubleClickZoom: false,
-                mapStyleId: "style1",
-                zoom: 13, // 设置地图缩放级别
-                pitch: 0,
-                rotation: 0,
-            });
-            map.removeControl(TMap.constants.DEFAULT_CONTROL_ID.ROTATION);
-            // this.createMarker();
-            this.getLx();
-            // this.poly();
         },
     },
 };
 </script>
 <style scoped>
-.lxwindow {
-    width: calc(880px / 4);
-    max-height: 80%;
-    background: #68cead;
-    border-radius: calc(30px / 4);
-    box-shadow: 20px 20px 25px rgb(38 22 22 / 25%);
-    padding: calc(20px / 4);
-    z-index: 99999;
-    overflow-x: none;
-    overflow-y: scroll;
-    position: absolute;
-    right: 10%;
-    top: 10%;
+.zbtitle {
+    font-size: calc(32px / 2);
+    padding: 1% 5%;
+    height: calc(45px / 2);
+    line-height: calc(45px / 2);
 }
-.lxwindow > img {
+.zbtitle:before {
+    width: calc(9px / 2);
+    height: calc(24px / 2);
+    border-radius: 20%;
+    background: #ff8989;
+    display: inline-block;
+    content: "";
+    margin-top: calc(10px / 2);
+    margin-right: calc(10px / 2);
+}
+.zbs {
     width: 100%;
-    /* height: 100%; */
+    padding: 0;
+    margin-left: 0;
+    margin: 0 auto;
+    margin-top: calc(20px / 4);
+    text-align: left;
+    padding: 0 calc(30px / 4);
 }
-.infoclose {
-    top: calc(10% - 120px / 2 / 4);
-    right: calc(10% - 120px / 2 / 4);
+.zbs li {
+    display: inline-block;
+    list-style: none;
+    padding: calc(10px / 4) calc(20px / 4);
+    border-radius: calc(55px / 2 / 4);
+    margin: calc(20px / 4);
+    background: #f5acac;
+    color: white;
+    font-size: calc(28px / 4);
+}
+.rw-block {
+    width: calc(3135px / 4);
     position: absolute;
-    width: calc(120px / 4);
-    height: calc(120px / 4);
     z-index: 999999;
+    top: 10%;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+}
+.pypx {
+    width: calc(376px / 4);
+    height: calc(104px / 4);
+    font-size: calc(42px / 4);
+    display: block;
+    color: white;
+    text-align: center;
+    line-height: calc(104px / 4);
+    background: url("~@/assets/pypx.png") no-repeat;
+    background-size: 100% 100%;
+}
+.rws {
+    width: 100%;
+    height: calc(180px / 4);
+    background: url("~@/assets/rws.png") no-repeat;
+    background-size: 100% 100%;
+}
+.rws li {
+    list-style: none;
+    height: calc(120px / 4);
+    display: inline-block;
+    line-height: calc(120px / 4);
+    background: none;
+    border-radius: calc(60px / 4);
+    padding: 0 calc(40px / 4);
+    margin-top: calc(30px / 4);
+    font-size: calc(45px / 4);
+    margin-right: calc(45px / 4);
+    color: white;
+}
+.rws li:first-child {
+    color: #fce9b7;
+}
+.actived {
+    color: #317b73 !important;
+    background: white !important;
+}
+.rwswg {
+    width: 100%;
+    padding: calc(40px / 4);
+    margin-top: calc(40px / 4);
+}
+.swiper-slide {
+    width: calc(440px / 4);
+    height: calc(440px / 4);
+    position: relative;
+    list-style: none;
+    text-align: center;
+    background: url("~@/assets/rwli.png") no-repeat;
+    background-size: 100% 100%;
+    border-radius: calc(40px / 4);
+}
+.swiper-slide > img {
+    width: calc(258px / 4);
+    height: calc(258px / 4);
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 auto;
+}
+.verthelp {
+    width: 0;
+    height: 100%;
+    display: inline-block;
+    vertical-align: middle;
+}
+.rwimg {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    bottom: 2%;
+    display: block;
+    color: white !important;
+    text-align: center;
+    background: url("~@/assets/name.png") no-repeat;
+    background-size: 100% 100%;
+    width: calc(190px / 4);
+    height: calc(54px / 4);
+    line-height: calc(54px / 4);
+    font-size: calc(46px / 4);
+    overflow: hidden;
+}
+.swiper-button-prev:after {
+    content: "";
+}
+.swiper-button-prev {
+    background: url("~@/assets/moreL.png") no-repeat;
+    background-size: 100% 100%;
+    width: calc(100px / 4);
+    height: calc(100px / 4);
+}
+.swiper-button-next:after {
+    content: "";
+}
+.swiper-button-next {
+    background: url("~@/assets/moreR.png") no-repeat;
+    background-size: 100% 100%;
+    width: calc(100px / 4);
+    height: calc(100px / 4);
+}
+
+.biginfo {
+    width: calc(980px / 4);
+    background: url("~@/assets/rwbg.png") no-repeat;
+    background-size: 100% 100%;
+    border-radius: calc(40px / 4);
+    box-shadow: 5px 5px 5px #c3c3c3;
+    padding: calc(40px / 4);
+    position: absolute;
+    z-index: 9999999;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    top: 12%;
+}
+.glzb {
+    width: 100%;
+    background: white;
+    margin-top: calc(45px / 4);
+    border-radius: calc(20px / 4);
+}
+.biginfoinner {
+    width: 100%;
+    height: calc(620px / 4);
+    background: white;
+    border-radius: 5%;
+    overflow-y: scroll;
+}
+.biginfoinner .infocontent {
+    height: calc(620px / 4);
+}
+.biginfoinner p {
+    margin-bottom: 0;
+}
+.biginfoinner img {
+    width: 100%;
+}
+.biginfocontent {
+    padding: calc(20px / 4);
+    overflow-y: scroll;
+}
+.biginfoinner .infocontent {
+    padding: 5%;
+}
+.biginfoinner .infotitle {
+    width: 100%;
+    color: black;
+    font-size: calc(32px / 4);
+    display: block;
+    margin-bottom: calc(20px / 4);
 }
 .infoclose img {
     width: 100%;
-    height: 100%;
-}
-.lxs {
-    width: calc(1900px / 4);
-    position: absolute;
-    z-index: 9999;
-    margin: 0 auto;
-    left: 0;
-    right: 0;
-    top: 10%;
-    list-style: none;
-}
-.lxs li:before {
-    width: calc(25px / 4);
-    height: calc(85px / 4);
-    border-radius: 20%;
-    background: #ffcb29;
-    display: inline-block;
-    content: "";
-    top: calc(50% - 85px / 2 / 4);
-    position: absolute;
-    left: 0;
-}
-.lxs li {
-    position: relative;
-    width: calc(800px / 4);
-    display: inline-block;
-    height: calc(150px / 4);
-    background: #fdf3bf;
-    border-radius: calc(50px / 4);
-    box-shadow: 0px 20px 20px rgb(38 22 22 / 25%);
-    text-align: center;
-    line-height: calc(150px / 4);
-    margin-bottom: calc(80px / 4);
-    overflow: hidden;
-    color: #317b73;
-    font-size: calc(46px / 4);
-}
-.lxs li:hover {
-    background: #f8cb28;
-    color: white;
-}
-.lxs li:nth-child(odd) {
-    float: left;
-}
-.lxs li:nth-child(even) {
-    float: right;
-}
-.lxs li:nth-child(even):before {
-    background: #47c6c1;
-}
-.lx {
-    width: calc(450px / 4);
-    position: absolute;
-    left: 5%;
-    top: 10%;
-    z-index: 9999;
-}
-.lxmctitle {
-    width: calc(450px / 4);
-    height: calc(120px / 4);
-    text-align: center;
-    line-height: calc(120px / 4);
-    display: block;
-    color: white;
-    font-size: calc(48px / 4);
-    background: url("~@/assets/lxt.png") no-repeat;
-    background-size: 100% 100%;
-    margin-bottom: calc(20px / 4);
-}
-.lxmctext {
-    width: calc(450px / 4);
-    height: calc(120px / 4);
-    text-align: center;
-    line-height: calc(120px / 4);
-    display: block;
-    color: #317b73;
-    font-size: calc(42px / 4);
-    text-shadow: 0 3px 3px rgba(0, 0, 0, 0.2);
-    margin-bottom: calc(20px / 4);
-}
-.lx ul {
-    padding: 0;
-    list-style-position: inside;
-    text-align: center;
-}
-.lx ul li {
-    line-height: calc(120px / 4);
-    display: block;
-    color: #317b73;
-    font-size: calc(48px / 4);
-    background: white;
-    border-radius: calc(120px / 4);
-    margin-bottom: calc(20px / 4);
-    box-shadow: 5px 5px 5px rgb(38 22 22 / 25%);
-}
-
-.lx ul li:before {
-    width: calc(36px / 4);
-    height: calc(36px / 4);
-    margin-right: calc(20px / 4);
-    border-radius: 50%;
-    background: #96deda;
-    display: inline-block;
-    content: "";
-}
-.lx ul li:first-child:before {
-    background: #68bcb3;
-}
-.lx ul li:last-child:before {
-    background: #ed9898;
-}
-.backbutton {
-    width: calc(300px / 4);
-    height: calc(100px / 4);
-    margin: 0 auto;
-    position: absolute;
-    z-index: 999999;
-    bottom: 10%;
-    left: 0;
-    right: 0;
 }
 </style>
 <style>

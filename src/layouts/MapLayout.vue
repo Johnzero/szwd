@@ -160,7 +160,7 @@ export default {
     position: absolute;
     left: 5%;
     top: 10%;
-    z-index: 99999;
+    z-index: 999999999;
 }
 .submenu {
     width: calc(120px / 4);
@@ -170,7 +170,7 @@ export default {
     position: absolute;
     left: 0;
     top: 10%;
-    z-index: 99999;
+    z-index: 999999999;
     display: none;
 }
 .show {
@@ -266,7 +266,7 @@ export default {
     opacity: 0.5;
 }
 .ermBlock {
-    z-index: 9999999;
+    z-index: 999999999;
     width: calc(960px / 4);
     height: calc(960px / 4);
     background: url("~@/assets/infobg.png") no-repeat;
@@ -275,7 +275,7 @@ export default {
     box-shadow: 5px 5px 5px #c3c3c3;
     padding: calc(40px / 4);
     position: absolute;
-    z-index: 99999;
+    z-index: 999999999;
     top: 30%;
     left: calc(100vh - 960px / 2 / 4);
 }

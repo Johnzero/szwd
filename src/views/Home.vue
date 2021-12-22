@@ -20,6 +20,9 @@
 export default {
     name: "Home",
     components: {},
+    mounted() {
+        document.title = "数字文都";
+    },
 };
 </script>
 <style scoped>

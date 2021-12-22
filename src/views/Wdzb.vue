@@ -17,7 +17,7 @@
                 <div class="infocontent">
                     <div class="infotitle">
                         {{ infotitle }}
-                        <div v-show="shipin" class="videoImg" @click="showvideo = true">
+                        <div v-show="shipin" class="videoImg" @click="showvideoclick">
                             <img :src="videoImg" />
                         </div>
                     </div>
@@ -84,11 +84,10 @@ export default {
                 sources: [
                     {
                         type: "video/mp4",
-                        src: this.shipin,
+                        src: "",
                     },
                 ],
                 poster: "",
-                notSupportedMessage: "此视频暂无法播放，请稍后再试",
                 controlBar: {
                     timeDivider: false,
                     durationDisplay: false,
@@ -113,12 +112,12 @@ export default {
                 require("../assets/d.png"),
             ],
             geometries: [
-                {
-                    id: "wxkq",
-                    category_id: "wxkq",
-                    styleId: "wxkq",
-                    position: new TMap.LatLng(32.058228, 118.791178),
-                },
+                // {
+                //     id: "wxkq",
+                //     category_id: "wxkq",
+                //     styleId: "wxkq",
+                //     position: new TMap.LatLng(32.058228, 118.791178),
+                // },
             ],
             swiperOptions: {
                 slidesPerView: 1,
@@ -223,10 +222,16 @@ export default {
     },
     mounted() {
         let that = this;
+        document.title = "文都坐标";
         that.initMap();
+
         window.handleHide = this.handleHide;
     },
     methods: {
+        showvideoclick() {
+            this.playerOptions["sources"][0]["src"] = this.shipin;
+            this.showvideo = true;
+        },
         hideVideo() {
             this.$refs.videoPlayer.player.pause();
             this.showvideo = false;
@@ -275,9 +280,15 @@ export default {
                 .then(function (response) {
                     if (response.data.data) {
                         var item = response.data.data;
-                        that.shipin = item.shipin;
+                        that.shipin = item.fields.shipin;
+                        console.log(item);
                         that.banners = item.albums;
                         that.infotitle = item.title;
+                        that.center = new TMap.LatLng(
+                            item.fields.jingdu,
+                            item.fields.weidu
+                        );
+                        that.map.setCenter(that.center);
                         that.infocontent = item.fields.jingdianjieshao;
                         var iC =
                             `
@@ -306,7 +317,7 @@ export default {
                                 </a>
                             </div>
                         `;
-                        that.infoWindow.setPosition(evt.geometry.position);
+                        that.infoWindow.setPosition(that.center);
                         that.infoWindow.setContent(iC);
                         that.infoWindow.open();
                         that.showinfo = true;
@@ -371,7 +382,9 @@ export default {
                 viewMode: "2D",
                 rotation: 0,
             });
+
             // map.removeControl(TMap.constants.DEFAULT_CONTROL_ID.ZOOM);
+            map.removeControl(TMap.constants.DEFAULT_CONTROL_ID.SCALE);
             map.removeControl(TMap.constants.DEFAULT_CONTROL_ID.ROTATION);
             this.$axios
                 .get("app.ashx?action=Getjingdianconcise")
@@ -400,6 +413,10 @@ export default {
                     console.log(error);
                     that.$message.error("网络错误！");
                 });
+
+            if (this.$route.query.id) {
+                this.markerClick({ geometry: { id: this.$route.query.id } });
+            }
 
             this.infoWindow = new TMap.InfoWindow({
                 map: this.map,
@@ -580,5 +597,8 @@ export default {
     left: 0;
     right: 0;
     top: calc(50% - 93px / 2 / 4);
+}
+#map > div > div:last-child {
+    display: none;
 }
 </style>
